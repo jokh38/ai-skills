@@ -1,0 +1,174 @@
+timestamp: "2026-01-02T03:00:05.222638+00:00"
+workspace: /home/vscode/.claude/skills/dbgctxt
+user_request: 
+codebase_summary:
+  total_files: 12
+  total_functions: 53
+  total_classes: 10
+  total_symbols: 0
+  primary_language: python
+structure_analysis:
+  files:
+    [12] {path, language, functions, classes, imports, docstring, entry_point, calls}
+    __main__.py | python | - | - | {2 keys} | null | {2 keys} | -
+    dbgctxt_cli.py | python | create_parser;main | - | {2 keys} | "DBGCTXT - Debug Context Generator CLI" | {2 keys} | [13 items]
+    utils/data_structures.py | python | - | ExecutionResult;FailureData;RichContext;StaticMap;FixPayload | {1 keys} | null | null | -
+    utils/path_utils.py | python | normalize_path;ensure_dir_exists | - | {1 keys} | null | null | [3 items]
+    utils/__init__.py | python | - | - | - | null | null | -
+    utils/toon_parser.py | python | parse_toon_file;parse_value;write_toon_file;write_toon_value;format_value | - | {1 keys} | null | null | [44 items]
+    src/artifact_manager.py | python | load_structure_map;load_quality_metrics;load_static_context | ReportContextLoader | {2 keys} | null | null | [17 items]
+    src/pipeline_orchestrator.py | python | __init__;_ensure_structure_toon;_ensure_qa_report_toon...(+3) | RepairWorkflowEngine | {2 keys} | null | {2 keys} | [46 items]
+    src/__init__.py | python | - | - | - | null | null | -
+    src/context_resolver.py | python | deduplicate_failures;enrich_failure_data;_resolve_structure_context...(+14) | FailureContextMapper | {2 keys} | null | null | [81 items]
+    src/verification_runner.py | python | __init__;trigger_verification;extract_failure_metadata;_generate_signature;_normalize_traceback | TestSuiteExecutor | {2 keys} | null | null | [43 items]
+    src/prompt_builder.py | python | construct_fix_request;construct_success_notice;_serialize_toon...(+10) | ToonPayloadGenerator | {2 keys} | null | null | [56 items]
+  entry_points:
+    -
+      file: __main__.py
+      type: main_block
+      line: 8
+    -
+      file: dbgctxt_cli.py
+      type: main_block
+      line: 152
+    -
+      file: src/pipeline_orchestrator.py
+      type: main_block
+      line: 150
+  file_purposes:
+    -
+      path: dbgctxt_cli.py
+      purpose: "DBGCTXT - Debug Context Generator CLI"
+  key_abstractions:
+    [10] {class, file, responsibility, key_methods}
+    ExecutionResult | utils/data_structures.py | "ExecutionResult implementation" | -
+    FailureData | utils/data_structures.py | "FailureData implementation" | -
+    RichContext | utils/data_structures.py | "RichContext implementation" | -
+    StaticMap | utils/data_structures.py | "StaticMap implementation" | -
+    FixPayload | utils/data_structures.py | "FixPayload implementation" | -
+    ReportContextLoader | src/artifact_manager.py | "ReportContextLoader implementation" | load_structure_map,load_quality_metrics,load_static_context
+    RepairWorkflowEngine | src/pipeline_orchestrator.py | "RepairWorkflowEngine implementation" | __init__,execute_pipeline,handle_exception
+    FailureContextMapper | src/context_resolver.py | "FailureContextMapper implementation" | deduplicate_failures,enrich_failure_data
+    TestSuiteExecutor | src/verification_runner.py | "TestSuiteExecutor implementation" | __init__,trigger_verification,extract_failure_metadata
+    ToonPayloadGenerator | src/prompt_builder.py | "ToonPayloadGenerator implementation" | construct_fix_request,construct_success_notice,save_payload
+definition_index:
+
+pattern_findings:
+  existing_tests:
+    count: 0
+    frameworks:
+      [1]
+      pytest
+  error_handling:
+    language: python
+    total_error_handlers: 0
+  technical_debt:
+    total_count: 0
+    by_type:
+      TODO: 0
+      FIXME: 0
+      HACK: 0
+      XXX: 0
+      NOTE: 0
+  import_graph:
+    total_imports: 61
+    unique_modules: 23
+    external_dependencies:
+      [23]
+      argparse
+      dataclasses
+      datetime
+      defusedxml.ElementTree
+      hashlib
+      logging
+      pathlib
+      re
+      shutil
+      src.artifact_manager
+      src.context_resolver
+      src.pipeline_orchestrator
+      src.prompt_builder
+      src.verification_runner
+      subprocess
+      sys
+      tempfile
+      textwrap
+      traceback
+      typing
+      utils.data_structures
+      utils.path_utils
+      utils.toon_parser
+    most_imported:
+      - ('pathlib', 10)
+      - ('re', 8)
+      - ('sys', 7)
+      - ('typing', 6)
+      - ('logging', 4)
+      - ('utils.data_structures', 4)
+      - ('utils.path_utils', 3)
+      - ('src.pipeline_orchestrator', 2)
+      - ('argparse', 2)
+      - ('subprocess', 2)
+      - ('textwrap', 1)
+      - ('shutil', 1)
+      - ('traceback', 1)
+      - ('dataclasses', 1)
+      - ('utils.toon_parser', 1)
+    source: ast
+  call_graph:
+    [50] {caller, callee, file}
+    create_parser | parser.add_argument | dbgctxt_cli.py
+    create_parser | dedent | dbgctxt_cli.py
+    create_parser | argparse.ArgumentParser | dbgctxt_cli.py
+    main | args.workspace.is_dir | dbgctxt_cli.py
+    main | engine.execute_pipeline | dbgctxt_cli.py
+    main | args.workspace.exists | dbgctxt_cli.py
+    main | create_parser | dbgctxt_cli.py
+    main | parser.parse_args | dbgctxt_cli.py
+    main | shutil.move | dbgctxt_cli.py
+    main | RepairWorkflowEngine | dbgctxt_cli.py
+    main | traceback.print_exc | dbgctxt_cli.py
+    normalize_path | Path | utils/path_utils.py
+    normalize_path | Path(path).resolve | utils/path_utils.py
+    ensure_dir_exists | path.mkdir | utils/path_utils.py
+    parse_toon_file | "line.strip()[1:].strip" | utils/toon_parser.py
+    parse_toon_file | re.search | utils/toon_parser.py
+    parse_toon_file | key.strip | utils/toon_parser.py
+    parse_toon_file | value.strip().strip('"').strip | utils/toon_parser.py
+    parse_toon_file | line.strip | utils/toon_parser.py
+    parse_toon_file | line.split | utils/toon_parser.py
+    parse_toon_file | section_data.append | utils/toon_parser.py
+    parse_toon_file | value.startswith | utils/toon_parser.py
+    parse_toon_file | value.strip().strip | utils/toon_parser.py
+    parse_toon_file | value.endswith | utils/toon_parser.py
+    parse_toon_file | parse_value | utils/toon_parser.py
+    parse_toon_file | line.strip().startswith | utils/toon_parser.py
+    parse_toon_file | value.strip | utils/toon_parser.py
+    parse_toon_file | last_item.keys | utils/toon_parser.py
+    parse_toon_file | h.strip | utils/toon_parser.py
+    parse_toon_file | headers_match.group | utils/toon_parser.py
+    parse_toon_file | headers_match.group(1).split | utils/toon_parser.py
+    parse_toon_file | v.strip | utils/toon_parser.py
+    parse_toon_file | data[current_section].append | utils/toon_parser.py
+    parse_toon_file | line.rstrip | utils/toon_parser.py
+    parse_value | value.lower | utils/toon_parser.py
+    parse_value | value.strip | utils/toon_parser.py
+    parse_value | value.strip().strip('"').strip | utils/toon_parser.py
+    parse_value | value.strip().strip | utils/toon_parser.py
+    write_toon_file | write_toon_value | utils/toon_parser.py
+    write_toon_file | f.write | utils/toon_parser.py
+    write_toon_file | format_value | utils/toon_parser.py
+    write_toon_file | data.items | utils/toon_parser.py
+    write_toon_value | value.items | utils/toon_parser.py
+    write_toon_value | f.write | utils/toon_parser.py
+    write_toon_value | format_value | utils/toon_parser.py
+    load_structure_map | normalize_path | src/artifact_manager.py
+    load_structure_map | structure_map[file_path].append | src/artifact_manager.py
+    load_structure_map | logger.error | src/artifact_manager.py
+    load_structure_map | parse_toon_file | src/artifact_manager.py
+    load_structure_map | normalized_path.exists | src/artifact_manager.py
+code_quality:
+  test_coverage_estimate: "Very Low (estimated <20%)"
+recommendations:
+  [1]
+  Increase test coverage: only 0 test files for 12 source files

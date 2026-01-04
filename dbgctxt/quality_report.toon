@@ -1,0 +1,105 @@
+timestamp: "2026-01-02T03:00:05.139923+00:00"
+workspace: /home/vscode/.claude/skills/dbgctxt
+summary:
+  files_analyzed: 12
+  total_issues: 2
+  quality_score: 100
+  tools_used:
+    - ruff
+    - ty
+    - semgrep
+    - complexipy
+    - skylos
+    - pattern_analyzer
+  execution_time_ms: 0
+quality_gates:
+  [5] {gate, threshold, actual, status}
+  linting_errors | <50 | 0 | PASS
+  type_coverage | >80% | 100.0% | PASS
+  security_critical | 0 | 0 | PASS
+  cognitive_complexity | <12 | 0 | PASS
+  dead_code | <5 | 0 | PASS
+critical_issues:
+  []
+ruff:
+  total: 0
+  auto_fixable: 0
+  by_category:
+    []
+  severity_counts:
+    error: 0
+    warning: 0
+    info: 0
+  all_issues:
+    []
+ty:
+  total: 0
+  type_coverage: 100.0%
+  by_error:
+    []
+  files_checked: 12
+  files_with_errors: 0
+  all_errors:
+    []
+semgrep:
+  total: 0
+  by_severity:
+    []
+  severity_counts:
+    ERROR: 0
+    WARNING: 0
+    INFO: 0
+  all_findings:
+    []
+complexipy:
+  avg_complexity: 0
+  total_functions: 0
+  complexity_hotspots:
+    []
+skylos:
+  total_dead_code: 0
+  confidence_level: 60
+  dead_functions:
+    []
+  unused_imports:
+    []
+  security_findings:
+    []
+consistency_issues:
+  -
+    pattern: error_handling
+    variants:
+      -
+        style: "try/except with logging"
+        files:
+          - src/verification_runner.py
+          - src/context_resolver.py
+          - src/artifact_manager.py
+        count: 5
+      -
+        style: "try/except without logging"
+        files:
+          - src/context_resolver.py
+          - dbgctxt_cli.py
+          - src/pipeline_orchestrator.py
+        count: 3
+    recommendation: "Standardize on 'try/except with logging' pattern"
+  -
+    pattern: missing_docstrings
+    variants:
+      -
+        style: "functions without docstrings"
+        files:
+          - utils/path_utils.py
+          - src/verification_runner.py
+          - src/artifact_manager.py
+          - src/pipeline_orchestrator.py
+          - src/context_resolver.py
+        count: 7
+    recommendation: "Add docstrings to public functions"
+issue_clusters:
+  []
+immediate_fixes:
+  []
+next_steps:
+  - "Enable ty strict mode for enhanced type safety"

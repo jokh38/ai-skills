@@ -1,0 +1,408 @@
+"""
+Ctags-based symbol indexer for definition navigation and API categorization.
+
+Generates symbol index for:
+- Public APIs vs internal functions
+- Function signatures
+- Class hierarchies
+- Symbol locations
+"""
+
+import subprocess
+import logging
+from pathlib import Path
+from typing import Dict, List, Optional, Any
+import json
+
+
+class CtagsIndexer:
+    """Indexes code symbols using ctags."""
+
+    def __init__(self, workspace: str):
+        """
+        Initialize indexer.
+
+        Args:
+            workspace: Root directory to index
+        """
+        self.workspace = Path(workspace)
+        self.tags_file = self.workspace / 'tags'
+        self.tags_data = []
+        self.ctags_version = None
+
+        # Check if ctags is available
+        self.ctags_available = self._check_ctags()
+
+    def _check_ctags(self) -> bool:
+        """Check if ctags is installed and accessible."""
+        try:
+            result = subprocess.run(
+                ['ctags', '--version'],
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            if result.returncode == 0:
+                version_line = result.stdout.splitlines()[0]
+                logging.info(f"ctags found: {version_line}")
+                
+                # Check for Universal Ctags (recommended)
+                if 'Universal Ctags' in version_line:
+                    self.ctags_version = 'universal'
+                    logging.info("✓ Using Universal Ctags (recommended)")
+                elif 'Exuberant Ctags' in version_line:
+                    self.ctags_version = 'exuberant'
+                    logging.info("Using Exuberant Ctags (consider upgrading to Universal Ctags)")
+                else:
+                    self.ctags_version = 'unknown'
+                    logging.warning(f"Unknown ctags version: {version_line}")
+                
+                return True
+            else:
+                logging.warning("ctags not available")
+                return False
+        except (subprocess.TimeoutExpired, FileNotFoundError) as e:
+            logging.warning(f"ctags not found: {e}")
+            return False
+
+    def _should_exclude_file(self, file_path: str) -> bool:
+        """
+        Check if file should be excluded from analysis.
+
+        Args:
+            file_path: Path string to check
+
+        Returns:
+            True if file should be excluded
+        """
+        path = Path(file_path)
+
+        # Exclude cache directories
+        excluded_dirs = {
+            '__pycache__',
+            '.pytest_cache',
+            '.tox',
+            '.eggs',
+            'build',
+            'dist',
+            'node_modules',
+            '.venv',
+            'venv',
+            'env',
+            '.git',
+            '.svn',
+            '.hg',
+            '.idea',
+            '.vscode',
+            'target',
+            'cmake-build-*',
+        }
+
+        for excluded_dir in excluded_dirs:
+            if excluded_dir in path.parts:
+                return True
+
+        # Exclude compiled and generated files
+        excluded_extensions = {
+            '.pyc', '.pyo', '.pyd', '.so', '.dylib', '.dll', '.exe', '.bin',
+            '.o', '.a', '.lib', '.obj',
+            '.class', '.jar', '.war',
+            '.min.js', '.min.css',
+        }
+
+        if path.suffix.lower() in excluded_extensions:
+            return True
+
+        return False
+
+    def generate_tags(self, pattern: str = "**/*") -> bool:
+        """
+        Generate ctags index for all files in workspace.
+
+        Args:
+            pattern: Glob pattern for files to index
+
+        Returns:
+            True if successful, False otherwise
+        """
+        if not self.ctags_available:
+            logging.error("ctags not available. Install with: brew install ctags (macOS) or apt-get install exuberant-ctags (Linux)")
+            return False
+
+        # Find all files matching pattern (use relative patterns)
+        files = []
+        if pattern.startswith('**'):
+            files = [str(f) for f in self.workspace.rglob(pattern[3:]) if f.is_file()]
+        elif '*' in pattern:
+            files = [str(f) for f in self.workspace.glob(pattern) if f.is_file()]
+        else:
+            files = [str(f) for f in self.workspace.glob(pattern) if f.is_file()]
+
+        # Filter out excluded files
+        files = [f for f in files if not self._should_exclude_file(f)]
+
+        if not files:
+            logging.warning(f"No files found matching {pattern} after filtering")
+            return False
+
+        logging.info(f"Generating tags for {len(files)} files...")
+
+        # Create a temp file with list of files to analyze
+        files_list_file = self.workspace / '.ctags_files_list.txt'
+
+        try:
+            with open(files_list_file, 'w') as f:
+                for file_path in files:
+                    f.write(str(file_path) + '\n')
+
+            # Run ctags with options for detailed output
+            cmd = [
+                'ctags',
+                '--fields=+nkKzS',  # Include extra fields: line number, kind, signature
+                '--output-format=json',  # JSON output (if supported)
+                '-f', str(self.tags_file),  # Output file
+                '-L', str(files_list_file)  # Read file list from file
+            ]
+
+            result = subprocess.run(
+                cmd,
+                cwd=str(self.workspace),
+                capture_output=True,
+                text=True,
+                timeout=60
+            )
+
+            if result.returncode != 0:
+                logging.error(f"ctags failed: {result.stderr}")
+                # Try simpler command without JSON format
+                return self._generate_tags_simple(pattern)
+
+            # Parse generated tags file
+            self._parse_tags_file(str(self.tags_file))
+            logging.info(f"Generated {len(self.tags_data)} tags")
+
+            return True
+
+        except subprocess.TimeoutExpired:
+            logging.error("ctags timed out after 60 seconds")
+            return False
+        except Exception as e:
+            logging.error(f"Failed to generate tags: {e}")
+            return False
+        finally:
+            # Cleanup temp file
+            try:
+                if files_list_file.exists():
+                    files_list_file.unlink()
+            except:
+                pass
+
+    def _generate_tags_simple(self, pattern: str = "**/*") -> bool:
+        """Generate tags using basic ctags command (fallback)."""
+        try:
+            # Find all files matching pattern (use relative patterns)
+            files = []
+            if pattern.startswith('**'):
+                suffix = pattern[3:] if len(pattern) > 3 else '*'
+                files = [str(f) for f in self.workspace.rglob(suffix) if f.is_file()]
+            elif '*' in pattern:
+                files = [str(f) for f in self.workspace.glob(pattern) if f.is_file()]
+            else:
+                files = [str(f) for f in self.workspace.glob(pattern) if f.is_file()]
+
+            files = [f for f in files if not self._should_exclude_file(f)]
+
+            if not files:
+                return False
+
+            # Create a temp file with list of files to analyze
+            files_list_file = self.workspace / '.ctags_files_list.txt'
+            with open(files_list_file, 'w') as f:
+                for file_path in files:
+                    f.write(str(file_path) + '\n')
+
+            cmd = [
+                'ctags',
+                '--fields=+n',  # Include line numbers
+                '-f', str(self.tags_file),
+                '-L', str(files_list_file)
+            ]
+
+            result = subprocess.run(
+                cmd,
+                cwd=str(self.workspace),
+                capture_output=True,
+                text=True,
+                timeout=60
+            )
+
+            if result.returncode == 0:
+                self._parse_tags_file(str(self.tags_file))
+                logging.info(f"Generated {len(self.tags_data)} tags (simple format)")
+                return True
+            else:
+                logging.error(f"Simple ctags also failed: {result.stderr}")
+                return False
+
+        except Exception as e:
+            logging.error(f"Fallback ctags failed: {e}")
+            return False
+
+    def _parse_tags_file(self, tags_file_path: Optional[str] = None):
+        """Parse generated tags file."""
+        file_path = Path(tags_file_path) if tags_file_path else self.tags_file
+
+        if not file_path.exists():
+            logging.warning(f"Tags file not found: {file_path}")
+            return
+
+        self.tags_data = []
+
+        try:
+            with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                for line in f:
+                    # Skip comments and metadata
+                    if line.startswith('!_TAG_'):
+                        continue
+
+                    # Parse tag line
+                    tag = self._parse_tag_line(line)
+                    if tag:
+                        self.tags_data.append(tag)
+
+        except Exception as e:
+            logging.error(f"Failed to parse tags file: {e}")
+
+    def _parse_tag_line(self, line: str) -> Optional[Dict]:
+        """
+        Parse a single ctags line.
+
+        Format: <name>\t<file>\t<address>;\"\t<kind>\t<extra fields>
+        """
+        parts = line.strip().split('\t')
+        if len(parts) < 3:
+            return None
+
+        tag = {
+            'name': parts[0],
+            'file': parts[1],
+            'kind': None,
+            'line': None,
+            'signature': None,
+        }
+
+        # Parse extra fields
+        for part in parts[3:]:
+            if part.startswith('kind:'):
+                tag['kind'] = part.split(':', 1)[1]
+            elif part.startswith('line:'):
+                try:
+                    tag['line'] = int(part.split(':', 1)[1])
+                except ValueError:
+                    pass
+            elif part.startswith('signature:'):
+                tag['signature'] = part.split(':', 1)[1]
+
+        return tag
+
+    def get_public_apis(self) -> List[Dict]:
+        """
+        Get public API symbols (functions/classes without _ prefix).
+
+        Returns:
+            List of public symbols
+        """
+        public_symbols = [
+            tag for tag in self.tags_data
+            if tag['kind'] in ['function', 'class', 'method']
+            and not tag['name'].startswith('_')
+        ]
+
+        # Sort by name and limit to top 50
+        return sorted(public_symbols, key=lambda x: x['name'])[:50]
+
+    def get_internal_functions(self) -> List[Dict]:
+        """
+        Get internal/private functions (starting with _).
+
+        Returns:
+            List of private symbols
+        """
+        internal_symbols = [
+            tag for tag in self.tags_data
+            if tag['kind'] in ['function', 'method']
+            and tag['name'].startswith('_')
+            and not tag['name'].startswith('__')  # Exclude magic methods
+        ]
+
+        return sorted(internal_symbols, key=lambda x: x['name'])[:30]
+
+    def search_symbol(self, name: str) -> List[Dict]:
+        """
+        Search for symbols by name (supports partial matching).
+
+        Args:
+            name: Symbol name to search for
+
+        Returns:
+            List of matching symbols
+        """
+        matches = [
+            tag for tag in self.tags_data
+            if name.lower() in tag['name'].lower()
+        ]
+
+        return sorted(matches, key=lambda x: x['name'])[:20]
+
+    def get_symbol_categories(self) -> Dict[str, int]:
+        """
+        Get count of symbols by category (function, class, variable, etc.).
+
+        Returns:
+            Dictionary mapping category to count
+        """
+        categories = {}
+        for tag in self.tags_data:
+            kind = tag.get('kind', 'unknown')
+            categories[kind] = categories.get(kind, 0) + 1
+
+        return categories
+
+    def get_summary(self) -> Dict[str, Any]:
+        """
+        Get summary of indexed symbols.
+
+        Returns:
+            Summary dictionary with counts and categories
+        """
+        return {
+            'total_symbols': len(self.tags_data),
+            'public_apis': len(self.get_public_apis()),
+            'internal_functions': len(self.get_internal_functions()),
+            'categories': self.get_symbol_categories(),
+            'tags_file': str(self.tags_file) if self.tags_file.exists() else None,
+        }
+
+    def cleanup(self):
+        """Remove generated tags file."""
+        if self.tags_file.exists():
+            try:
+                self.tags_file.unlink()
+                logging.info(f"Removed tags file: {self.tags_file}")
+            except Exception as e:
+                logging.warning(f"Failed to remove tags file: {e}")
+
+
+if __name__ == '__main__':
+    # Test the indexer
+    import sys
+    if len(sys.argv) > 1:
+        workspace = sys.argv[1]
+        indexer = CtagsIndexer(workspace)
+        if indexer.generate_tags():
+            print(json.dumps(indexer.get_summary(), indent=2))
+            print("\nPublic APIs:")
+            for api in indexer.get_public_apis()[:10]:
+                print(f"  {api['name']} ({api['kind']}) - {api['file']}:{api['line']}")
+    else:
+        print("Usage: python ctags_indexer.py <workspace_path>")

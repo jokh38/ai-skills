@@ -1,0 +1,10 @@
+README.md
+__main__.py
+dbgctxt_cli.py
+pyproject.toml
+dbgctxt.egg-info/PKG-INFO
+dbgctxt.egg-info/SOURCES.txt
+dbgctxt.egg-info/dependency_links.txt
+dbgctxt.egg-info/entry_points.txt
+dbgctxt.egg-info/requires.txt
+dbgctxt.egg-info/top_level.txt

@@ -1,0 +1,11 @@
+README.md
+__init__.py
+cdqa_cli.py
+pyproject.toml
+run_QA.py
+cdqa.egg-info/PKG-INFO
+cdqa.egg-info/SOURCES.txt
+cdqa.egg-info/dependency_links.txt
+cdqa.egg-info/entry_points.txt
+cdqa.egg-info/requires.txt
+cdqa.egg-info/top_level.txt

@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dbgctxt"
+version = "0.1.0"
+description = "Automated test failure analysis and context generation for LLM-based code repair using pytest and TOON artifacts"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [
+    {name = "Developer"}
+]
+dependencies = [
+    "pytest>=7.0.0",
+]
+
+[project.scripts]
+dbgctxt = "dbgctxt_cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "black>=23.0.0",
+]
+
+[tool.setuptools]
+py-modules = ["dbgctxt_cli", "__main__"]

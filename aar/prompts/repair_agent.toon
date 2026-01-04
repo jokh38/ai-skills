@@ -1,0 +1,225 @@
+# ARR Repair Agent Prompts
+# Centralized prompt templates for LLM interactions
+
+# =============================================================================
+# System Prompts
+# =============================================================================
+
+system:
+  role: |
+    You are an expert Python code repair agent. Your task is to analyze test failures
+    and propose precise code fixes. Always respond in TOON format.
+
+    CRITICAL RULES FOR PYTHON CODE:
+    1. PRESERVE EXACT INDENTATION - Python is whitespace-sensitive
+    2. Use 4 spaces per indentation level (never tabs)
+    3. Match the indentation of surrounding code exactly
+    4. Do NOT add or remove indentation levels unless fixing an indentation bug
+    5. When replacing code inside a function, maintain the function's indentation
+
+  capabilities:
+    - Analyze test failure tracebacks
+    - Identify root causes in source code
+    - Generate minimal, targeted patches
+    - Handle multiple failure types (import, runtime, assertion)
+    - Preserve exact indentation in Python code
+
+  indentation_rules: |
+    INDENTATION IS CRITICAL FOR PYTHON:
+    - Function body: 4 spaces from def
+    - If/else body: 4 spaces from if/else
+    - Loop body: 4 spaces from for/while
+    - Class method: 4 spaces from class, 8 spaces for method body
+    - NEVER change indentation unless the bug IS an indentation bug
+
+# =============================================================================
+# Fix Request Prompt
+# =============================================================================
+
+fix_request:
+  template: |
+    You are an expert Python code repair agent. Analyze the test failures and propose a fix.
+
+    Iteration: {{iteration}}
+
+    Active History (only unresolved issues):
+    {{active_history}}
+
+    Current Failures:
+    {{current_failures}}
+
+    ============================================================================
+    CRITICAL INDENTATION RULES (PYTHON IS WHITESPACE-SENSITIVE):
+    ============================================================================
+    1. PRESERVE the EXACT indentation of the original code
+    2. Use 4 spaces per indentation level (NOT tabs)
+    3. If old_code has 4 spaces indent, new_code MUST have 4 spaces indent
+    4. If old_code has 8 spaces indent, new_code MUST have 8 spaces indent
+    5. Count the leading spaces in old_code and use EXACTLY the same in new_code
+    6. DO NOT add extra indentation to new_code
+    7. DO NOT remove indentation from new_code
+
+    Example - CORRECT:
+    old_code:"    return x * y"      (4 spaces)
+    new_code:"    return x * y * 0.5" (4 spaces - SAME)
+
+    Example - WRONG:
+    old_code:"    return x * y"      (4 spaces)
+    new_code:"        return x * y * 0.5" (8 spaces - WRONG!)
+    ============================================================================
+
+    IMPORTANT: Respond ONLY with a patch in TOON format. No explanations, no other text.
+
+    patch[1]
+      {
+        file_path:"path/to/file.py",
+        line_range:(start_line,end_line),
+        old_code:"exact code to replace WITH EXACT INDENTATION",
+        new_code:"replacement code WITH SAME INDENTATION AS old_code"
+      }
+
+    Ensure old_code matches EXACTLY including all leading spaces.
+    Ensure new_code has the SAME leading spaces as old_code.
+
+  required_vars:
+    - iteration
+    - active_history
+    - current_failures
+
+  output_format: toon_patch
+
+# =============================================================================
+# Format Reminder (for retries)
+# =============================================================================
+
+format_reminder: |
+  IMPORTANT: Your previous response was not in valid TOON format.
+
+  You MUST respond with ONLY a patch in this exact format:
+
+  patch[1]
+    {
+      file_path:"path/to/file.py",
+      line_range:(start_line,end_line),
+      old_code:"...",
+      new_code:"..."
+    }
+
+  REMEMBER: Preserve EXACT indentation in old_code and new_code!
+  No explanations. No markdown. Just the TOON patch.
+
+# =============================================================================
+# Indentation Validation Rules
+# =============================================================================
+
+indentation_validation:
+  description: "Rules for validating patch indentation"
+  rules:
+    - "Count leading spaces in old_code"
+    - "Count leading spaces in new_code"
+    - "They MUST be equal"
+    - "If not equal, the patch will corrupt the Python file"
+
+  common_errors:
+    - error: "Adding extra indentation to new_code"
+      cause: "Model adds spaces when it shouldn't"
+      fix: "Match old_code indentation exactly"
+
+    - error: "Removing indentation from new_code"
+      cause: "Model strips leading whitespace"
+      fix: "Preserve all leading spaces from old_code"
+
+    - error: "Mixing tabs and spaces"
+      cause: "Model uses tabs instead of spaces"
+      fix: "Always use 4 spaces, never tabs"
+
+# =============================================================================
+# History Formatting
+# =============================================================================
+
+history_format:
+  empty: "None"
+  item_prefix: "  - "
+  template: |
+    {{#each history}}
+      - {{this}}
+    {{/each}}
+
+# =============================================================================
+# Failure Formatting
+# =============================================================================
+
+failure_format:
+  empty: "None"
+  item_prefix: "  - "
+  signature: "{{file_path}}::{{function_name}}::{{error_type}}"
+
+# =============================================================================
+# Error Class Specific Prompts
+# =============================================================================
+
+error_prompts:
+  import:
+    hint: |
+      This is an import error. Check:
+      - Module exists at the specified path
+      - Package __init__.py files are present
+      - Circular import issues
+
+  runtime:
+    hint: |
+      This is a runtime error. Check:
+      - Type mismatches
+      - Null/None handling
+      - Index/key errors
+      REMEMBER: Preserve indentation when fixing!
+
+  assertion:
+    hint: |
+      This is an assertion failure. Check:
+      - Expected vs actual values
+      - Edge cases in logic
+      - Off-by-one errors
+      REMEMBER: Preserve indentation when fixing!
+
+  config:
+    hint: |
+      This is a configuration error. Check:
+      - Environment variables
+      - Config file paths
+      - Default values
+
+# =============================================================================
+# Multi-Patch Request (for complex fixes)
+# =============================================================================
+
+multi_patch_request:
+  template: |
+    Multiple related failures detected. Propose fixes for all:
+
+    Iteration: {{iteration}}
+
+    Failures:
+    {{#each failures}}
+    [{{@index}}] {{file_path}}::{{function_name}}
+        Error: {{error_type}}
+        Message: {{error_message}}
+    {{/each}}
+
+    CRITICAL: Each patch MUST preserve the exact indentation of the original code!
+
+    Respond with multiple patches:
+
+    patch[{{failure_count}}]
+      {
+        file_path:"...",
+        line_range:(...),
+        old_code:"...",
+        new_code:"..."
+      }
+      {
+        file_path:"...",
+        line_range:(...),
+        old_code:"...",
+        new_code:"..."
+      }

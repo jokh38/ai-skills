@@ -1,0 +1,8 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "debugging_context"
+version = "1.0.0"
+description = "Automated Test Repair Payload Generator"

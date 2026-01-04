@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zgit"
+version = "0.1.0"
+description = "Context-preserving git commits using zagi with automatic context storage via --prompt flag"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [
+    {name = "Developer"}
+]
+dependencies = []
+
+[project.scripts]
+zgit = "zgit_cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+]
+
+[tool.setuptools]
+py-modules = ["zgit_cli", "zgit"]

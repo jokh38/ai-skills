@@ -1,0 +1,171 @@
+timestamp: "2026-01-02T02:15:04.640055+00:00"
+workspace: /home/vscode/.claude/skills/cdqa
+user_request: 
+codebase_summary:
+  total_files: 11
+  total_functions: 61
+  total_classes: 8
+  total_symbols: 0
+  primary_language: python
+structure_analysis:
+  files:
+    [11] {path, language, functions, classes, imports, docstring, entry_point, calls}
+    run_QA.py | python | __init__;analyze;_synthesize_results...(+12) | CodeQualityChecker | {2 keys} | "Code Quality Checker v2.0 - Main Entry Point" | {2 keys} | [94 items]
+    __init__.py | python | - | - | - | "Code Quality Checker - Integrated Python code quality analysis." | null | -
+    cdqa_cli.py | python | create_parser;main | - | {2 keys} | "CDQA - Code Quality Analysis CLI" | {2 keys} | [15 items]
+    tools/semgrep_scanner.py | python | __init__;scan;_process_results;_empty_results | SemgrepScanner | {1 keys} | "Semgrep security scanner integration for pattern-based analysis." | null | [25 items]
+    tools/ty_checker.py | python | __init__;analyze;_process_results;_get_error_description;_empty_results | TyChecker | {1 keys} | "ty type checker integration for Python type analysis." | null | [30 items]
+    tools/skylos_analyzer.py | python | __init__;scan;_process_results;_empty_results | SkylosAnalyzer | {1 keys} | "Skylos dead code and security analyzer integration." | null | [21 items]
+    tools/ruff_checker.py | python | __init__;check;_process_results;_empty_results | RuffChecker | {1 keys} | "Ruff linter integration for Python code quality checking." | null | [21 items]
+    tools/__init__.py | python | - | - | - | "Code quality checker tools." | null | -
+    tools/complexipy_metrics.py | python | __init__;measure;_process_results;_complexity_to_grade;_empty_results | ComplexipyMetrics | {1 keys} | "Complexipy cognitive complexity integration for code complexity analysis." | null | [23 items]
+    tools/pattern_analyzer.py | python | __init__;analyze;_analyze_file...(+8) | PatternAnalyzer | {1 keys} | "Pattern Analyzer - Detects code consistency issues across a codebase." | null | [71 items]
+    tools/toon_serializer.py | python | __init__;serialize;_serialize_dict...(+8) | ToonSerializer | {1 keys} | "TOON Format Serializer" | null | [51 items]
+  entry_points:
+    -
+      file: run_QA.py
+      type: main_block
+      line: 695
+    -
+      file: cdqa_cli.py
+      type: main_block
+      line: 167
+  file_purposes:
+    [11] {path, purpose}
+    run_QA.py | "Code Quality Checker v2.0 - Main Entry Point"
+    __init__.py | "Code Quality Checker - Integrated Python code quality analysis."
+    cdqa_cli.py | "CDQA - Code Quality Analysis CLI"
+    tools/semgrep_scanner.py | "Semgrep security scanner integration for pattern-based analysis."
+    tools/ty_checker.py | "ty type checker integration for Python type analysis."
+    tools/skylos_analyzer.py | "Skylos dead code and security analyzer integration."
+    tools/ruff_checker.py | "Ruff linter integration for Python code quality checking."
+    tools/__init__.py | "Code quality checker tools."
+    tools/complexipy_metrics.py | "Complexipy cognitive complexity integration for code complexity analysis."
+    tools/pattern_analyzer.py | "Pattern Analyzer - Detects code consistency issues across a codebase."
+    tools/toon_serializer.py | "TOON Format Serializer"
+  key_abstractions:
+    [8] {class, file, responsibility, key_methods}
+    CodeQualityChecker | run_QA.py | "Code Quality Checker v2.0 - Main Entry Point" | __init__,analyze
+    SemgrepScanner | tools/semgrep_scanner.py | "Semgrep security scanner integration for pattern-based analy" | __init__,scan
+    TyChecker | tools/ty_checker.py | "ty type checker integration for Python type analysis." | __init__,analyze
+    SkylosAnalyzer | tools/skylos_analyzer.py | "Skylos dead code and security analyzer integration." | __init__,scan
+    RuffChecker | tools/ruff_checker.py | "Ruff linter integration for Python code quality checking." | __init__,check
+    ComplexipyMetrics | tools/complexipy_metrics.py | "Complexipy cognitive complexity integration for code complex" | __init__,measure
+    PatternAnalyzer | tools/pattern_analyzer.py | "Pattern Analyzer - Detects code consistency issues across a " | __init__,analyze
+    ToonSerializer | tools/toon_serializer.py | "TOON Format Serializer" | __init__,serialize,dumps,dump
+definition_index:
+
+pattern_findings:
+  existing_tests:
+    count: 0
+  error_handling:
+    language: python
+    total_error_handlers: 0
+  technical_debt:
+    total_count: 0
+    by_type:
+      TODO: 0
+      FIXME: 0
+      HACK: 0
+      XXX: 0
+      NOTE: 0
+  import_graph:
+    total_imports: 53
+    unique_modules: 21
+    external_dependencies:
+      [21]
+      argparse
+      ast
+      collections
+      complexipy_metrics
+      datetime
+      json
+      logging
+      pathlib
+      pattern_analyzer
+      re
+      ruff_checker
+      run_QA
+      semgrep_scanner
+      skylos_analyzer
+      subprocess
+      sys
+      textwrap
+      toon_serializer
+      traceback
+      ty_checker
+      typing
+    most_imported:
+      - ('pathlib', 8)
+      - ('typing', 8)
+      - ('logging', 7)
+      - ('json', 5)
+      - ('subprocess', 5)
+      - ('argparse', 2)
+      - ('sys', 2)
+      - ('datetime', 2)
+      - ('traceback', 2)
+      - ('ruff_checker', 1)
+      - ('ty_checker', 1)
+      - ('semgrep_scanner', 1)
+      - ('complexipy_metrics', 1)
+      - ('skylos_analyzer', 1)
+      - ('pattern_analyzer', 1)
+    source: ast
+  call_graph:
+    [50] {caller, callee, file}
+    __init__ | TyChecker | run_QA.py
+    __init__ | logging.basicConfig | run_QA.py
+    __init__ | datetime.now().astimezone | run_QA.py
+    __init__ | datetime.now | run_QA.py
+    __init__ | PatternAnalyzer | run_QA.py
+    __init__ | RuffChecker | run_QA.py
+    __init__ | ComplexipyMetrics | run_QA.py
+    __init__ | SemgrepScanner | run_QA.py
+    __init__ | Path(workspace).resolve | run_QA.py
+    __init__ | logging.getLogger | run_QA.py
+    __init__ | datetime.now().astimezone().isoformat | run_QA.py
+    __init__ | Path | run_QA.py
+    __init__ | SkylosAnalyzer | run_QA.py
+    analyze | self.ruff.check | run_QA.py
+    analyze | self.semgrep.scan | run_QA.py
+    analyze | self.logger.info | run_QA.py
+    analyze | self.skylos.scan | run_QA.py
+    analyze | self.pattern_analyzer.analyze | run_QA.py
+    analyze | self._synthesize_results | run_QA.py
+    analyze | self.ty.analyze | run_QA.py
+    analyze | self.complexipy.measure | run_QA.py
+    _synthesize_results | self._calculate_quality_score | run_QA.py
+    _synthesize_results | ty.get | run_QA.py
+    _synthesize_results | self._format_ty_results | run_QA.py
+    _synthesize_results | self._format_semgrep_results | run_QA.py
+    _synthesize_results | self._build_critical_issues | run_QA.py
+    _synthesize_results | semgrep['severity_counts'].get | run_QA.py
+    _synthesize_results | self._cluster_issues | run_QA.py
+    _synthesize_results | self._format_ruff_results | run_QA.py
+    _synthesize_results | self._format_complexipy_results | run_QA.py
+    _synthesize_results | self._generate_immediate_fixes | run_QA.py
+    _synthesize_results | max | run_QA.py
+    _synthesize_results | pattern.get | run_QA.py
+    _synthesize_results | self._format_skylos_results | run_QA.py
+    _synthesize_results | self._generate_next_steps | run_QA.py
+    _calculate_quality_score | ty.get | run_QA.py
+    _calculate_quality_score | semgrep['severity_counts'].get | run_QA.py
+    _calculate_quality_score | max | run_QA.py
+    _calculate_quality_score | min | run_QA.py
+    _build_critical_issues | issues.append | run_QA.py
+    _build_critical_issues | issues.sort | run_QA.py
+    _build_critical_issues | issue['code'].startswith | run_QA.py
+    _build_critical_issues | self._extract_snippet | run_QA.py
+    _build_critical_issues | hotspot.get | run_QA.py
+    _build_critical_issues | severity_order.get | run_QA.py
+    _format_ty_results | ty.get | run_QA.py
+    _format_complexipy_results | complexipy.get | run_QA.py
+    _format_skylos_results | skylos.get | run_QA.py
+    _generate_immediate_fixes | fixes.append | run_QA.py
+    _extract_snippet | f.readlines | run_QA.py
+code_quality:
+  test_coverage_estimate: "Very Low (estimated <20%)"
+recommendations:
+  [1]
+  Increase test coverage: only 0 test files for 11 source files

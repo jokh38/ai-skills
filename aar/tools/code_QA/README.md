@@ -1,0 +1,135 @@
+# Code Quality Checker
+
+Integrated Python code quality analysis using ruff, mypy, semgrep, and radon.
+
+## Quick Start
+
+```bash
+# Basic usage
+cd /home/vscode/.claude/skills/tddwf/tools/code_QA
+python run_QA.py --workspace /path/to/project
+
+# With custom output
+python run_QA.py \
+  --workspace /path/to/project \
+  --output quality_report.toon \
+  --verbose
+```
+
+## What It Does
+
+1. **Ruff Linting** - Check code style, find bugs, enforce best practices
+2. **Mypy Type Checking** - Verify type annotations and type safety
+3. **Semgrep Security Scanning** - Detect security vulnerabilities and anti-patterns
+4. **Radon Complexity Analysis** - Measure cyclomatic complexity and maintainability
+
+## Output
+
+Generates `quality_report.toon` in TOON format with:
+- Quality summary and overall score (0-100)
+- Quality gates status (pass/fail thresholds)
+- Critical issues prioritized by severity
+- Tool-specific findings (ruff, mypy, semgrep, radon)
+- Immediate fixes and next steps
+
+**Example output:**
+```toon
+summary:
+  quality_score: 72
+  total_issues: 199
+
+quality_gates:
+  [4] {gate, threshold, actual, status}
+  linting_errors | <50 | 127 | FAIL
+  type_coverage | >80% | 68% | FAIL
+  security_critical | 0 | 2 | FAIL
+  max_complexity | <15 | 32 | FAIL
+
+critical_issues:
+  [5] {severity, tool, file, line, issue}
+  ERROR | semgrep | src/api/database.py | 156 | SQL injection
+  ERROR | radon | src/api/routes.py | 45 | Complexity 32 (F-grade)
+  ...
+```
+
+## Prerequisites
+
+Install required tools:
+
+```bash
+# Install all tools
+pip install ruff mypy semgrep radon
+
+# Verify installations
+ruff --version
+mypy --version
+semgrep --version
+radon --version
+```
+
+## Command Options
+
+```
+--workspace <dir>      # Project directory (required)
+--pattern <glob>       # File pattern (default: **/*.py)
+--output <file>        # Output file (default: quality_report.toon)
+--verbose              # Enable detailed logging
+--max-issues <N>       # Max issues to display (default: 50)
+```
+
+## Tool Structure
+
+```
+code_QA/
+├── README.md                     # This file
+├── SKILL.md                      # Complete skill documentation
+├── run_QA.py                     # Main orchestrator
+├── analyze.py                    # Entry point wrapper
+└── tools/
+    ├── ruff_checker.py           # Ruff linting
+    ├── mypy_analyzer.py          # Type checking
+    ├── semgrep_scanner.py        # Security scanning
+    ├── radon_metrics.py          # Complexity metrics
+    └── toon_serializer.py        # TOON output formatter
+```
+
+## Example Workflow
+
+```bash
+# 1. Run quality check
+python run_QA.py --workspace /workspaces/myapp
+
+# 2. Review report
+cat /workspaces/myapp/quality_report.toon
+
+# 3. Fix auto-fixable issues
+cd /workspaces/myapp
+ruff check --fix src/
+
+# 4. Re-run to verify improvements
+python run_QA.py --workspace /workspaces/myapp
+```
+
+## Integration
+
+### Pre-commit Hook
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: local
+    hooks:
+      - id: quality-check
+        name: Code Quality Check
+        entry: python tools/code_QA/run_QA.py --workspace .
+        language: system
+        pass_filenames: false
+```
+
+### CI/CD
+```yaml
+# GitHub Actions
+- name: Run Quality Check
+  run: |
+    python tools/code_QA/run_QA.py --workspace .
+    if grep -q "FAIL" quality_report.toon; then exit 1; fi
+```

@@ -1,0 +1,88 @@
+# Automated Test Repair Payload Generator
+
+A Python tool that synthesizes static analysis data (from TOON artifacts) and dynamic test results (from pytest) to generate context-aware fix proposals for LLM-based code repair.
+
+## Features
+
+- **Smart Failure Deduplication**: Groups failures by unique signatures to prevent context window overflow
+- **Success Handling**: Terminates immediately when all tests pass
+- **Context Enrichment**: Maps runtime errors to AST structure and static analysis issues
+- **TOON Format**: Uses Token-Oriented Object Notation for efficient data transmission
+- **Automatic Analysis**: Automatically runs `code_analyzer` and `code_QA` if TOON files don't exist
+- **Single Test Execution**: Focus debugging on specific test cases with `--test-case`
+
+## Architecture
+
+The system follows a pipeline architecture with four main stages:
+
+1. **Artifact Loading** - Parses `structure.toon` and `qa_report.toon`
+2. **Dynamic Verification** - Executes pytest and captures results
+3. **Context Mapping** - Deduplicates and enriches failure data
+4. **Prompt Assembly** - Serializes context into TOON format
+
+## Installation
+
+```bash
+cd tools/debugging_context
+pip install -r requirements.txt
+```
+
+## Usage
+
+```bash
+python -m debugging_context <workspace_path>
+```
+
+### Arguments
+
+- `workspace_path` (required) - Path to the workspace containing tests
+- `--test-case <test_case>` (optional) - Run only a specific test case (e.g., `tests/test_example.py::test_function`)
+
+### Features
+
+**Automatic TOON Generation:**
+If `structure.toon` or `qa_report.toon` don't exist in the workspace, the tool will automatically:
+- Run `code_analyzer` to generate `structure.toon` with codebase structure analysis
+- Run `code_QA` to generate `qa_report.toon` with comprehensive quality checks
+
+**Single Test Execution:**
+Use `--test-case` to focus on debugging a specific failing test:
+
+```bash
+# Run all tests in a file
+python -m debugging_context sample_project --test-case tests/test_math.py
+
+# Run a specific test function
+python -m debugging_context sample_project --test-case tests/test_math.py::test_addition
+```
+
+### Workspace Requirements
+
+The workspace should contain:
+- Test files for pytest execution
+- (Optional) Pre-existing `structure.toon` - AST structure metadata (auto-generated if missing)
+- (Optional) Pre-existing `qa_report.toon` - Static analysis results (auto-generated if missing)
+
+## Module Structure
+
+- `src/pipeline_orchestrator.py` - Main workflow orchestration
+- `src/artifact_manager.py` - Static artifact loading
+- `src/verification_runner.py` - Test execution and result parsing
+- `src/context_resolver.py` - Failure deduplication and enrichment
+- `src/prompt_builder.py` - TOON payload generation
+- `utils/` - Shared utilities (path handling, TOON parsing, data structures)
+
+## Testing
+
+A sample project is provided in `sample_project/` for testing:
+
+```bash
+cd tools/debugging_context
+python -m debugging_context sample_project
+```
+
+This will generate `fix_payload.toon` in the sample project directory.
+
+## License
+
+Part of the TDDWF toolchain.

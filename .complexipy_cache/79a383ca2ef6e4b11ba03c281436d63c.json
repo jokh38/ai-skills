@@ -1,0 +1,55 @@
+{
+  "functions": [
+    {
+      "complexity": 0,
+      "file_name": "complex_module.py",
+      "function_name": "get_config_value",
+      "path": "src/complex_module.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "complex_module.py",
+      "function_name": "legacy_handler",
+      "path": "src/complex_module.py"
+    },
+    {
+      "complexity": 47,
+      "file_name": "complex_module.py",
+      "function_name": "process_complex_data",
+      "path": "src/complex_module.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "security_issues.py",
+      "function_name": "execute_command",
+      "path": "src/security_issues.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "security_issues.py",
+      "function_name": "run_system_command",
+      "path": "src/security_issues.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "type_issues.py",
+      "function_name": "fetch_api",
+      "path": "src/type_issues.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "type_issues.py",
+      "function_name": "process_user",
+      "path": "src/type_issues.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "type_issues.py",
+      "function_name": "calculate_total",
+      "path": "src/type_issues.py"
+    }
+  ],
+  "targets": [
+    "/tmp/test_project_with_issues/src"
+  ]
+}

@@ -1,0 +1,67 @@
+# RRD Configuration
+# Recursive Repair Development - Environment-based configuration
+
+# Tool paths (supports ${RRD_TOOLS_PATH} variable)
+tools:
+  cdqa: "${RRD_TOOLS_PATH}/cdqa"
+  cdscan: "${RRD_TOOLS_PATH}/cdscan"
+  dbgctxt: "${RRD_TOOLS_PATH}/dbgctxt"
+  zgit: "${RRD_TOOLS_PATH}/zgit"
+
+# Project paths
+paths:
+  workspace: "."
+  knowledge_kernel: ".specify/memory/knowledge_kernel.toon"
+  session_logs: ".specify/memory/rrd_sessions"
+  backup_dir: ".repair_backups"
+
+# Analysis settings
+analysis:
+  incremental_mode: true  # Use git diff for changed files only
+  max_file_scan: 50       # Limit for full codebase scan
+  diff_base: "main"       # Branch to compare against for incremental analysis
+  include_dependencies: true  # Expand to include imported files
+  max_expansion_depth: 2  # How many levels of dependencies to include
+
+# Knowledge kernel filtering (optimized for token savings)
+knowledge_kernel:
+  rolling_window_days: 7  # Only load failures from last 7 days
+  max_entries: 100        # Maximum entries to load
+  criticality_threshold: "medium"  # Filter by criticality level (low/medium/high)
+
+# Quality gates (gradual vs strict mode)
+quality_gates:
+  mode: "gradual"  # gradual | strict
+
+  # L2 Thresholds: Drafting phase (relaxed)
+  l2_thresholds:
+    linting_errors: 100
+    type_coverage: 60
+    security_critical: 0
+    cognitive_complexity: 15
+    dead_code: 10
+
+  # L3 Thresholds: Hardening phase (strict)
+  l3_thresholds:
+    linting_errors: 50
+    type_coverage: 80
+    security_critical: 0
+    cognitive_complexity: 12
+    dead_code: 5
+
+# Cycle detection settings
+cycle_detection:
+  window_size: 4  # Number of attempts to track for cycle detection
+  similarity_threshold: 0.9  # Threshold for semantic similarity
+  max_attempts: 4  # Maximum attempts before marking as blocked
+
+# Patch management settings
+patch_management:
+  atomic_write_enabled: true
+  backup_before_patch: true
+  backup_dir: ".repair_backups"
+
+# LLM settings
+llm:
+  timeout_seconds: 300
+  max_retries: 3

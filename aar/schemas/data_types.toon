@@ -1,0 +1,102 @@
+# ARR Data Type Schemas in TOON format
+# These define the core data structures used throughout the repair agent
+
+# =============================================================================
+# Core Failure Types
+# =============================================================================
+
+FailureSignature:
+  description: "Unique identifier for a test failure"
+  fields:
+    [3] {name, type, required, description}
+    file_path | str | true | Path to the file containing the failure
+    function_name | str | true | Name of the failing function/test
+    error_type | str | true | Type of error (e.g., AssertionError, TypeError)
+
+FailurePayload:
+  description: "Container for multiple failures with context"
+  fields:
+    [3] {name, type, required, description}
+    failures | list[FailureSignature] | true | List of failure signatures
+    traceback_snippets | dict[str, str] | true | Map of failure ID to traceback
+    context | dict[str, any] | true | Additional context information
+
+# =============================================================================
+# Patch Types
+# =============================================================================
+
+PatchToon:
+  description: "A code patch in TOON format for applying fixes"
+  fields:
+    [4] {name, type, required, description}
+    file_path | str | true | Path to file to patch
+    line_range | tuple[int, int] | true | Start and end line numbers
+    old_code | str | true | Original code to replace
+    new_code | str | true | New code to insert
+
+# =============================================================================
+# Context Types
+# =============================================================================
+
+ActiveContext:
+  description: "Current repair context with history and failures"
+  fields:
+    [3] {name, type, required, description}
+    active_history | list[dict] | true | History of repair attempts
+    current_failures | list[FailureSignature] | true | Current unresolved failures
+    iteration | int | true | Current repair iteration number
+
+SessionSummary:
+  description: "Summary of a repair session"
+  fields:
+    [5] {name, type, required, description}
+    session_id | str | true | Unique session identifier
+    timestamp | str | true | ISO format timestamp
+    total_iterations | int | true | Number of iterations performed
+    status | str | true | Final status (SUCCESS, FAILED, etc.)
+    success_rate | float | true | Percentage of fixes that succeeded
+
+# =============================================================================
+# Report Types
+# =============================================================================
+
+FixReport:
+  description: "Report of fixes applied by static fixer"
+  fields:
+    [4] {name, type, required, description}
+    target_path | str | true | Path to the fixed file
+    fixes_applied | list[str] | true | List of fix descriptions
+    summary | str | true | Human-readable summary
+    success | bool | true | Whether fixes were successful
+
+# =============================================================================
+# Cycle Detection
+# =============================================================================
+
+CycleDetectionState:
+  description: "State for detecting repair cycles"
+  fields:
+    [3] {name, type, required, default}
+    patch_hash_history | list[str] | true | []
+    signature_history | list[frozenset[str]] | true | []
+    last_patch_hash | str | false | null
+
+# =============================================================================
+# Configuration
+# =============================================================================
+
+Config:
+  description: "Agent configuration settings"
+  fields:
+    [11] {name, type, default, env_var}
+    max_retries | int | 5 | REPAIR_MAX_RETRIES
+    ruff_enabled | bool | true | REPAIR_ENABLE_RUFF
+    ruff_rules | str | "E,F,W" | RUFF_RULES
+    log_level | str | "INFO" | REPAIR_LOG_LEVEL
+    cycle_window | int | 4 | CYCLE_WINDOW
+    toon_delimiter | str | "|" | TOON_DELIMITER
+    atomic_write_enabled | bool | true | ATOMIC_WRITE
+    backup_before_patch | bool | true | BACKUP_BEFORE_PATCH
+    llm_timeout_seconds | int | 300 | LLM_TIMEOUT
+    max_toon_retries | int | 3 | MAX_TOON_RETRIES
+    enable_key_folding | bool | false | ENABLE_KEY_FOLDING

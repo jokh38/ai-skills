@@ -1,0 +1,167 @@
+timestamp: "2025-12-31T07:43:25.814068+00:00"
+workspace: /home/vscode/.claude/skills/ARR
+summary:
+  files_analyzed: 45
+  total_issues: 19
+  quality_score: 57
+  execution_time_ms: 0
+quality_gates:
+  -
+    gate: linting_errors
+    threshold: <50
+    actual: 16
+    status: PASS
+  -
+    gate: type_coverage
+    threshold: >80%
+    actual: 100.0%
+    status: PASS
+  -
+    gate: security_critical
+    threshold: 0
+    actual: 3
+    status: FAIL
+  -
+    gate: max_complexity
+    threshold: <15
+    actual: 34
+    status: FAIL
+critical_issues:
+  [13] {severity, tool, file, line, issue}
+  ERROR | semgrep | tools/LLM_api/.env | 4 | "security: Generic API Key detected"
+  ERROR | semgrep | tools/debugging_context/src/verification_runner.py | 41 | "security: The native Python `xml` library is vulnerable to XML External Entity (XXE) attacks.  These attacks can leak confidential data and "XML bombs" can cause denial of service. Do not use this library to parse untrusted input. Instead  the Python documentation recommends using `defusedxml`."
+  ERROR | semgrep | tools/debugging_context/src/verification_runner.py | 79 | "security: The native Python `xml` library is vulnerable to XML External Entity (XXE) attacks.  These attacks can leak confidential data and "XML bombs" can cause denial of service. Do not use this library to parse untrusted input. Instead  the Python documentation recommends using `defusedxml`."
+  ERROR | radon | tools/debugging_context/src/verification_runner.py | 0 | "Complexity 34 (F-grade) in extract_failure_metadata"
+  ERROR | ruff | src/agent_orchestrator.py | 16 | "F401: `typing.Optional` imported but unused"
+  ERROR | ruff | src/agent_orchestrator.py | 19 | "F401: `modules.data_types.PatchToon` imported but unused"
+  ERROR | ruff | tools/LLM_api/llm_client.py | 174 | "F841: Local variable `current_template_id` is assigned to but never used"
+  ERROR | ruff | tools/LLM_api/llm_client.py | 175 | "F841: Local variable `current_template_parts` is assigned to but never used"
+  ERROR | ruff | tools/LLM_api/llm_client.py | 188 | "F841: Local variable `headers` is assigned to but never used"
+  ERROR | ruff | tools/LLM_api/llm_client.py | 194 | "F841: Local variable `current_section` is assigned to but never used"
+  ERROR | ruff | tools/LLM_api/llm_client.py | 196 | "F841: Local variable `parsing_row` is assigned to but never used"
+  ERROR | ruff | tools/code_analyzer/tools/treesitter_analyzer.py | 112 | "F841: Local variable `path_str` is assigned to but never used"
+  WARNING | radon | tools/LLM_api/llm_client.py | 0 | "Complexity 22 (D-grade) in _parse_toon_prompts"
+ruff:
+  total: 16
+  auto_fixable: 8
+  by_category:
+    -
+      code: F
+      category: pyflakes-errors
+      count: 8
+    -
+      code: i
+      category: other
+      count: 6
+    -
+      code: E
+      category: pycodestyle-errors
+      count: 2
+  severity_counts:
+    error: 10
+    warning: 0
+    info: 6
+  all_issues:
+    [16] {file, line, column, code, message, severity, fixable}
+    arr.py | 12 | 1 | E402 | "Module level import not at top of file" | error | false
+    src/agent_orchestrator.py | 16 | 20 | F401 | "`typing.Optional` imported but unused" | error | true
+    src/agent_orchestrator.py | 19 | 5 | F401 | "`modules.data_types.PatchToon` imported but unused" | error | true
+    src/modules/llm_gateway.py | 425 | 77 | invalid-syntax | "Simple statements must be separated by newlines or semicolons" | info | false
+    src/modules/llm_gateway.py | 425 | 84 | invalid-syntax | "Simple statements must be separated by newlines or semicolons" | info | false
+    src/modules/llm_gateway.py | 425 | 91 | invalid-syntax | "Simple statements must be separated by newlines or semicolons" | info | false
+    src/modules/llm_gateway.py | 425 | 94 | invalid-syntax | "Simple statements must be separated by newlines or semicolons" | info | false
+    src/modules/llm_gateway.py | 425 | 98 | invalid-syntax | "Expected a newline after line continuation character" | info | false
+    src/modules/llm_gateway.py | 425 | 99 | invalid-syntax | "Expected a newline after line continuation character" | info | false
+    tools/LLM_api/llm_client.py | 174 | 9 | F841 | "Local variable `current_template_id` is assigned to but never used" | error | true
+    tools/LLM_api/llm_client.py | 175 | 9 | F841 | "Local variable `current_template_parts` is assigned to but never used" | error | true
+    tools/LLM_api/llm_client.py | 188 | 21 | F841 | "Local variable `headers` is assigned to but never used" | error | true
+    tools/LLM_api/llm_client.py | 194 | 17 | F841 | "Local variable `current_section` is assigned to but never used" | error | true
+    tools/LLM_api/llm_client.py | 196 | 17 | F841 | "Local variable `parsing_row` is assigned to but never used" | error | true
+    tools/code_analyzer/tools/ctags_indexer.py | 183 | 13 | E722 | "Do not use bare `except`" | error | false
+    tools/code_analyzer/tools/treesitter_analyzer.py | 112 | 9 | F841 | "Local variable `path_str` is assigned to but never used" | error | true
+mypy:
+  total: 0
+  type_coverage: 100.0%
+  by_error:
+    []
+  files_checked: 45
+  files_with_errors: 0
+  all_errors:
+    []
+semgrep:
+  total: 3
+  by_severity:
+    -
+      severity: ERROR
+      category: security
+      count: 3
+  severity_counts:
+    ERROR: 3
+    WARNING: 0
+    INFO: 0
+  all_findings:
+    -
+      severity: ERROR
+      category: security
+      cwe: "CWE-798: Use of Hard-coded Credentials"
+      file: tools/LLM_api/.env
+      line: 4
+      rule_id: generic.secrets.security.detected-generic-api-key.detected-generic-api-key
+      message: "Generic API Key detected"
+      confidence: LOW
+    -
+      severity: ERROR
+      category: security
+      cwe: "CWE-611: Improper Restriction of XML External Entity Reference"
+      file: tools/debugging_context/src/verification_runner.py
+      line: 41
+      rule_id: python.lang.security.use-defused-xml-parse.use-defused-xml-parse
+      message: "The native Python `xml` library is vulnerable to XML External Entity (XXE) attacks.  These attacks can leak confidential data and "XML bombs" can cause denial of service. Do not use this library to parse untrusted input. Instead  the Python documentation recommends using `defusedxml`."
+      confidence: MEDIUM
+    -
+      severity: ERROR
+      category: security
+      cwe: "CWE-611: Improper Restriction of XML External Entity Reference"
+      file: tools/debugging_context/src/verification_runner.py
+      line: 79
+      rule_id: python.lang.security.use-defused-xml-parse.use-defused-xml-parse
+      message: "The native Python `xml` library is vulnerable to XML External Entity (XXE) attacks.  These attacks can leak confidential data and "XML bombs" can cause denial of service. Do not use this library to parse untrusted input. Instead  the Python documentation recommends using `defusedxml`."
+      confidence: MEDIUM
+radon:
+  avg_complexity: 4.0
+  total_functions: 291
+  complexity_hotspots:
+    [10] {file, function, complexity, grade}
+    tools/debugging_context/src/verification_runner.py | extract_failure_metadata | 34 | F
+    tools/LLM_api/llm_client.py | _parse_toon_prompts | 22 | D
+    tools/code_analyzer/tools/ctags_indexer.py | generate_tags | 19 | C
+    tools/code_analyzer/tools/ctags_indexer.py | _generate_tags_simple | 16 | C
+    tools/LLM_api/llm_client.py | main | 16 | C
+    src/modules/patch_manager.py | apply_patch | 15 | C
+    tools/code_analyzer/tools/treesitter_analyzer.py | _extract_module_name | 14 | C
+    tools/LLM_api/src/agent_engine.py | generate_agentic | 14 | C
+    tools/code_QA/run_QA.py | _build_critical_issues | 13 | C
+    tools/code_analyzer/run_code_review.py | _identify_integration_points | 13 | C
+  maintainability:
+    [10] {file, mi_score, grade}
+    src/modules/llm_gateway.py | 0 | Critical
+    tools/debugging_context/src/context_resolver.py | 15.4 | Critical
+    tools/code_analyzer/tools/treesitter_analyzer.py | 28.3 | Poor
+    tools/debugging_context/src/prompt_builder.py | 29.5 | Poor
+    tools/debugging_context/src/verification_runner.py | 30.0 | Poor
+    src/modules/toon_utils.py | 31.9 | Poor
+    tools/LLM_api/llm_client.py | 35.6 | Poor
+    tools/debugging_context/src/pipeline_orchestrator.py | 38.3 | Poor
+    src/modules/data_types.py | 38.3 | Poor
+    tools/code_analyzer/run_code_review.py | 41.3 | Moderate
+immediate_fixes:
+  [5] {priority, action, effort}
+  1 | "Run: ruff check --fix src/" | 2min
+  2 | "Fix security: tools/LLM_api/.env:4" | 10min
+  3 | "Fix security: tools/debugging_context/src/verification_runner.py:41" | 10min
+  4 | "Fix security: tools/debugging_context/src/verification_runner.py:79" | 10min
+  5 | "Refactor: tools/debugging_context/src/verification_runner.py (complexity 34→<15)" | 2hrs
+next_steps:
+  [2]
+  Refactor 2 high-complexity functions (F/D grade)
+  Enable mypy strict mode after reaching >80% coverage

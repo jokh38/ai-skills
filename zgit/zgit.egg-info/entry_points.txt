@@ -1,0 +1,2 @@
+[console_scripts]
+zgit = zgit_cli:main

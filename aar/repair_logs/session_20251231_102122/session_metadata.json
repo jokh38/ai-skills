@@ -1,0 +1,7 @@
+{
+  "session_id": "session_20251231_102122",
+  "timestamp": "2025-12-31T10:21:22.545932",
+  "max_retries": 10,
+  "ruff_enabled": true,
+  "cycle_window": 4
+}

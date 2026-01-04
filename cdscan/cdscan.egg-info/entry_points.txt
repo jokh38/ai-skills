@@ -1,0 +1,2 @@
+[console_scripts]
+cdscan = cdscan_cli:main

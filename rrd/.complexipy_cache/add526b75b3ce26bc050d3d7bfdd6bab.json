@@ -1,0 +1,97 @@
+{
+  "functions": [
+    {
+      "complexity": 0,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::__init__",
+      "path": "patch_manager.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::_apply_code_replacement",
+      "path": "patch_manager.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::_read_file_content",
+      "path": "patch_manager.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::atomic_write",
+      "path": "patch_manager.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::create_backup",
+      "path": "patch_manager.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::restore_backup",
+      "path": "patch_manager.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::_rollback_on_failure",
+      "path": "patch_manager.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::_find_single_line_match",
+      "path": "patch_manager.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::_locate_and_validate_code_match",
+      "path": "patch_manager.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::_resolve_file_path",
+      "path": "patch_manager.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::_validate_line_range",
+      "path": "patch_manager.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::are_paths_equal",
+      "path": "patch_manager.py"
+    },
+    {
+      "complexity": 5,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::verify_patch",
+      "path": "patch_manager.py"
+    },
+    {
+      "complexity": 6,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::_find_multiline_match",
+      "path": "patch_manager.py"
+    },
+    {
+      "complexity": 9,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::apply_patch",
+      "path": "patch_manager.py"
+    }
+  ],
+  "targets": [
+    "/home/vscode/.claude/skills/rrd/core/patch_manager.py"
+  ]
+}

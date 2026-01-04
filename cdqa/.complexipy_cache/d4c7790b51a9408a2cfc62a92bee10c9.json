@@ -1,0 +1,373 @@
+{
+  "functions": [
+    {
+      "complexity": 0,
+      "file_name": "cdqa_cli.py",
+      "function_name": "create_parser",
+      "path": "cdqa/cdqa_cli.py"
+    },
+    {
+      "complexity": 7,
+      "file_name": "cdqa_cli.py",
+      "function_name": "main",
+      "path": "cdqa/cdqa_cli.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "run_QA.py",
+      "function_name": "CodeQualityChecker::analyze",
+      "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "run_QA.py",
+      "function_name": "CodeQualityChecker::__init__",
+      "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "run_QA.py",
+      "function_name": "CodeQualityChecker::_format_complexipy_results",
+      "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "run_QA.py",
+      "function_name": "CodeQualityChecker::_format_ruff_results",
+      "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "run_QA.py",
+      "function_name": "CodeQualityChecker::_format_semgrep_results",
+      "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "run_QA.py",
+      "function_name": "CodeQualityChecker::_format_skylos_results",
+      "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "run_QA.py",
+      "function_name": "CodeQualityChecker::_format_ty_results",
+      "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 3,
+      "file_name": "run_QA.py",
+      "function_name": "CodeQualityChecker::_calculate_quality_score",
+      "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 5,
+      "file_name": "run_QA.py",
+      "function_name": "CodeQualityChecker::_synthesize_results",
+      "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 6,
+      "file_name": "run_QA.py",
+      "function_name": "CodeQualityChecker::_extract_snippet",
+      "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 6,
+      "file_name": "run_QA.py",
+      "function_name": "CodeQualityChecker::_generate_next_steps",
+      "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 7,
+      "file_name": "run_QA.py",
+      "function_name": "main",
+      "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 10,
+      "file_name": "run_QA.py",
+      "function_name": "CodeQualityChecker::_cluster_issues",
+      "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 18,
+      "file_name": "run_QA.py",
+      "function_name": "CodeQualityChecker::_generate_immediate_fixes",
+      "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 19,
+      "file_name": "run_QA.py",
+      "function_name": "CodeQualityChecker::_build_critical_issues",
+      "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "complexipy_metrics.py",
+      "function_name": "ComplexipyMetrics::__init__",
+      "path": "cdqa/tools/complexipy_metrics.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "complexipy_metrics.py",
+      "function_name": "ComplexipyMetrics::_empty_results",
+      "path": "cdqa/tools/complexipy_metrics.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "complexipy_metrics.py",
+      "function_name": "ComplexipyMetrics::_process_results",
+      "path": "cdqa/tools/complexipy_metrics.py"
+    },
+    {
+      "complexity": 5,
+      "file_name": "complexipy_metrics.py",
+      "function_name": "ComplexipyMetrics::_complexity_to_grade",
+      "path": "cdqa/tools/complexipy_metrics.py"
+    },
+    {
+      "complexity": 11,
+      "file_name": "complexipy_metrics.py",
+      "function_name": "ComplexipyMetrics::measure",
+      "path": "cdqa/tools/complexipy_metrics.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "pattern_analyzer.py",
+      "function_name": "PatternAnalyzer::__init__",
+      "path": "cdqa/tools/pattern_analyzer.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "pattern_analyzer.py",
+      "function_name": "PatternAnalyzer::_is_pascal_case",
+      "path": "cdqa/tools/pattern_analyzer.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "pattern_analyzer.py",
+      "function_name": "PatternAnalyzer::_is_snake_case",
+      "path": "cdqa/tools/pattern_analyzer.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "pattern_analyzer.py",
+      "function_name": "PatternAnalyzer::_analyze_file",
+      "path": "cdqa/tools/pattern_analyzer.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "pattern_analyzer.py",
+      "function_name": "PatternAnalyzer::_is_camel_case",
+      "path": "cdqa/tools/pattern_analyzer.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "pattern_analyzer.py",
+      "function_name": "PatternAnalyzer::analyze",
+      "path": "cdqa/tools/pattern_analyzer.py"
+    },
+    {
+      "complexity": 8,
+      "file_name": "pattern_analyzer.py",
+      "function_name": "PatternAnalyzer::_analyze_imports",
+      "path": "cdqa/tools/pattern_analyzer.py"
+    },
+    {
+      "complexity": 15,
+      "file_name": "pattern_analyzer.py",
+      "function_name": "PatternAnalyzer::_build_consistency_issues",
+      "path": "cdqa/tools/pattern_analyzer.py"
+    },
+    {
+      "complexity": 18,
+      "file_name": "pattern_analyzer.py",
+      "function_name": "PatternAnalyzer::_analyze_naming",
+      "path": "cdqa/tools/pattern_analyzer.py"
+    },
+    {
+      "complexity": 24,
+      "file_name": "pattern_analyzer.py",
+      "function_name": "PatternAnalyzer::_analyze_error_handling",
+      "path": "cdqa/tools/pattern_analyzer.py"
+    },
+    {
+      "complexity": 26,
+      "file_name": "pattern_analyzer.py",
+      "function_name": "PatternAnalyzer::_analyze_docstrings",
+      "path": "cdqa/tools/pattern_analyzer.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "ruff_checker.py",
+      "function_name": "RuffChecker::__init__",
+      "path": "cdqa/tools/ruff_checker.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "ruff_checker.py",
+      "function_name": "RuffChecker::_empty_results",
+      "path": "cdqa/tools/ruff_checker.py"
+    },
+    {
+      "complexity": 8,
+      "file_name": "ruff_checker.py",
+      "function_name": "RuffChecker::check",
+      "path": "cdqa/tools/ruff_checker.py"
+    },
+    {
+      "complexity": 11,
+      "file_name": "ruff_checker.py",
+      "function_name": "RuffChecker::_process_results",
+      "path": "cdqa/tools/ruff_checker.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "semgrep_scanner.py",
+      "function_name": "SemgrepScanner::__init__",
+      "path": "cdqa/tools/semgrep_scanner.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "semgrep_scanner.py",
+      "function_name": "SemgrepScanner::_empty_results",
+      "path": "cdqa/tools/semgrep_scanner.py"
+    },
+    {
+      "complexity": 8,
+      "file_name": "semgrep_scanner.py",
+      "function_name": "SemgrepScanner::scan",
+      "path": "cdqa/tools/semgrep_scanner.py"
+    },
+    {
+      "complexity": 11,
+      "file_name": "semgrep_scanner.py",
+      "function_name": "SemgrepScanner::_process_results",
+      "path": "cdqa/tools/semgrep_scanner.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "skylos_analyzer.py",
+      "function_name": "SkylosAnalyzer::__init__",
+      "path": "cdqa/tools/skylos_analyzer.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "skylos_analyzer.py",
+      "function_name": "SkylosAnalyzer::_empty_results",
+      "path": "cdqa/tools/skylos_analyzer.py"
+    },
+    {
+      "complexity": 6,
+      "file_name": "skylos_analyzer.py",
+      "function_name": "SkylosAnalyzer::_process_results",
+      "path": "cdqa/tools/skylos_analyzer.py"
+    },
+    {
+      "complexity": 25,
+      "file_name": "skylos_analyzer.py",
+      "function_name": "SkylosAnalyzer::scan",
+      "path": "cdqa/tools/skylos_analyzer.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_serializer.py",
+      "function_name": "ToonSerializer::__init__",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_serializer.py",
+      "function_name": "ToonSerializer::dump",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_serializer.py",
+      "function_name": "ToonSerializer::dumps",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_serializer.py",
+      "function_name": "dump",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_serializer.py",
+      "function_name": "dumps",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "toon_serializer.py",
+      "function_name": "ToonSerializer::_is_uniform_list",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "toon_serializer.py",
+      "function_name": "ToonSerializer::_serialize_uniform_list",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "toon_serializer.py",
+      "function_name": "ToonSerializer::serialize",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 7,
+      "file_name": "toon_serializer.py",
+      "function_name": "ToonSerializer::_serialize_dict",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 8,
+      "file_name": "toon_serializer.py",
+      "function_name": "ToonSerializer::_serialize_list",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 11,
+      "file_name": "toon_serializer.py",
+      "function_name": "ToonSerializer::_serialize_primitive",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "ty_checker.py",
+      "function_name": "TyChecker::__init__",
+      "path": "cdqa/tools/ty_checker.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "ty_checker.py",
+      "function_name": "TyChecker::_empty_results",
+      "path": "cdqa/tools/ty_checker.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "ty_checker.py",
+      "function_name": "TyChecker::_get_error_description",
+      "path": "cdqa/tools/ty_checker.py"
+    },
+    {
+      "complexity": 10,
+      "file_name": "ty_checker.py",
+      "function_name": "TyChecker::_process_results",
+      "path": "cdqa/tools/ty_checker.py"
+    },
+    {
+      "complexity": 18,
+      "file_name": "ty_checker.py",
+      "function_name": "TyChecker::analyze",
+      "path": "cdqa/tools/ty_checker.py"
+    }
+  ],
+  "targets": [
+    "/home/vscode/.claude/skills/cdqa"
+  ]
+}

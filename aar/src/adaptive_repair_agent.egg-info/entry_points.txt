@@ -1,0 +1,2 @@
+[console_scripts]
+arr = src.cli:main

@@ -1,0 +1,180 @@
+timestamp: "2026-01-02T02:08:34.355894+00:00"
+workspace: /home/vscode/.claude/skills/cdscan
+user_request: 
+codebase_summary:
+  total_files: 12
+  total_functions: 125
+  total_classes: 7
+  total_symbols: 0
+  primary_language: python
+structure_analysis:
+  files:
+    [12] {path, language, functions, classes, imports, docstring, entry_point, calls}
+    check_dependencies.py | python | check_python_package;check_command;check_ctags_version;main | - | {1 keys} | "Dependency checker for cdscan v2.0" | {2 keys} | [11 items]
+    cdscan_cli.py | python | create_parser;main | - | {2 keys} | "CDSCAN - Code Structure Scanner CLI" | {2 keys} | [17 items]
+    __init__.py | python | - | - | - | null | null | -
+    run_code_review.py | python | __init__;_omit_empty;analyze...(+17) | CodeReviewAnalyzer | {2 keys} | "Code Review Analyzer - Main Entry Point" | {2 keys} | [137 items]
+    analyze.py | python | analyze;main | - | {2 keys} | null | {2 keys} | [17 items]
+    tools/ugrep_searcher.py | python | __init__;_check_ugrep;search_archives...(+7) | UgrepSearcher | {1 keys} | "ugrep advanced search integration." | {2 keys} | [40 items]
+    tools/ripgrep_searcher.py | python | __init__;_check_ripgrep;_get_exclude_patterns...(+11) | RipgrepSearcher | {1 keys} | "Ripgrep-based pattern searcher for fast keyword and pattern matching." | {2 keys} | [77 items]
+    tools/astgrep_analyzer.py | python | __init__;_check_astgrep;search_pattern...(+5) | AstGrepAnalyzer | {1 keys} | "ast-grep structural search integration." | {2 keys} | [30 items]
+    tools/treesitter_analyzer.py | python | __init__;_load_parsers;_should_exclude_file...(+33) | TreeSitterAnalyzer | {2 keys} | "Tree-sitter based code analyzer for syntax parsing and structure extraction." | {2 keys} | [154 items]
+    tools/__init__.py | python | - | - | - | null | null | -
+    tools/ctags_indexer.py | python | __init__;_check_ctags;_should_exclude_file...(+10) | CtagsIndexer | {1 keys} | "Ctags-based symbol indexer for definition navigation and API categorization." | {2 keys} | [71 items]
+    tools/toon_serializer.py | python | __init__;serialize;_serialize_dict...(+13) | ToonSerializer | {1 keys} | "TOON Format Serializer" | null | [74 items]
+  entry_points:
+    [9] {file, type, line}
+    check_dependencies.py | main_block | 170
+    cdscan_cli.py | main_block | 209
+    run_code_review.py | main_block | 776
+    analyze.py | main_block | 68
+    tools/ugrep_searcher.py | main_block | 363
+    tools/ripgrep_searcher.py | main_block | 469
+    tools/astgrep_analyzer.py | main_block | 217
+    tools/treesitter_analyzer.py | main_block | 922
+    tools/ctags_indexer.py | main_block | 396
+  file_purposes:
+    [9] {path, purpose}
+    check_dependencies.py | "Dependency checker for cdscan v2.0"
+    cdscan_cli.py | "CDSCAN - Code Structure Scanner CLI"
+    run_code_review.py | "Code Review Analyzer - Main Entry Point"
+    tools/ugrep_searcher.py | "ugrep advanced search integration."
+    tools/ripgrep_searcher.py | "Ripgrep-based pattern searcher for fast keyword and pattern matching."
+    tools/astgrep_analyzer.py | "ast-grep structural search integration."
+    tools/treesitter_analyzer.py | "Tree-sitter based code analyzer for syntax parsing and structure extraction."
+    tools/ctags_indexer.py | "Ctags-based symbol indexer for definition navigation and API categorization."
+    tools/toon_serializer.py | "TOON Format Serializer"
+  key_abstractions:
+    [7] {class, file, responsibility, key_methods}
+    CodeReviewAnalyzer | run_code_review.py | "Code Review Analyzer - Main Entry Point" | __init__,analyze,cleanup
+    UgrepSearcher | tools/ugrep_searcher.py | "ugrep advanced search integration." | __init__,search_archives,fuzzy_search,search_pdfs,boolean_search
+    RipgrepSearcher | tools/ripgrep_searcher.py | "Ripgrep-based pattern searcher for fast keyword and pattern " | __init__,search_pattern,get_test_files,search_error_patterns,search_todo_fixme
+    AstGrepAnalyzer | tools/astgrep_analyzer.py | "ast-grep structural search integration." | __init__,search_pattern,lint,find_common_patterns
+    TreeSitterAnalyzer | tools/treesitter_analyzer.py | "Tree-sitter based code analyzer for syntax parsing and struc" | __init__,analyze_directory,search_pattern,get_summary,cleanup
+    CtagsIndexer | tools/ctags_indexer.py | "Ctags-based symbol indexer for definition navigation and API" | __init__,generate_tags,get_public_apis,get_internal_functions,search_symbol
+    ToonSerializer | tools/toon_serializer.py | "TOON Format Serializer" | __init__,serialize,dumps,dump,serialize_to_file
+definition_index:
+
+pattern_findings:
+  existing_tests:
+    count: 0
+    frameworks:
+      [3]
+      junit
+      pytest
+      unittest
+  error_handling:
+    language: python
+    total_error_handlers: 0
+  technical_debt:
+    total_count: 0
+    by_type:
+      TODO: 0
+      FIXME: 0
+      HACK: 0
+      XXX: 0
+      NOTE: 0
+  import_graph:
+    total_imports: 70
+    unique_modules: 25
+    external_dependencies:
+      [25]
+      argparse
+      ast
+      astgrep_analyzer
+      ctags_indexer
+      datetime
+      json
+      logging
+      os
+      pathlib
+      re
+      ripgrep_searcher
+      run_code_review
+      subprocess
+      sys
+      textwrap
+      toon_serializer
+      traceback
+      tree_sitter
+      tree_sitter_cpp
+      tree_sitter_javascript
+      tree_sitter_python
+      tree_sitter_typescript.typescript
+      treesitter_analyzer
+      typing
+      ugrep_searcher
+    most_imported:
+      - ('sys', 9)
+      - ('pathlib', 9)
+      - ('typing', 7)
+      - ('logging', 6)
+      - ('json', 6)
+      - ('subprocess', 5)
+      - ('argparse', 3)
+      - ('traceback', 3)
+      - ('re', 3)
+      - ('run_code_review', 2)
+      - ('datetime', 2)
+      - ('ast', 2)
+      - ('textwrap', 1)
+      - ('treesitter_analyzer', 1)
+      - ('ctags_indexer', 1)
+    source: ast
+  call_graph:
+    [50] {caller, callee, file}
+    check_python_package | __import__ | check_dependencies.py
+    check_command | result.stdout.splitlines | check_dependencies.py
+    check_command | subprocess.run | check_dependencies.py
+    check_ctags_version | subprocess.run | check_dependencies.py
+    main | check_ctags_version | check_dependencies.py
+    main | check_command | check_dependencies.py
+    main | check_python_package | check_dependencies.py
+    create_parser | dedent | cdscan_cli.py
+    create_parser | parser.add_argument | cdscan_cli.py
+    create_parser | argparse.ArgumentParser | cdscan_cli.py
+    main | serializer.dump | cdscan_cli.py
+    main | Path | cdscan_cli.py
+    main | analyzer.analyze | cdscan_cli.py
+    main | create_parser | cdscan_cli.py
+    main | parser.parse_args | cdscan_cli.py
+    main | results['codebase_summary'].get | cdscan_cli.py
+    main | results['code_quality'].get | cdscan_cli.py
+    main | traceback.print_exc | cdscan_cli.py
+    main | analyzer.cleanup | cdscan_cli.py
+    main | CodeReviewAnalyzer | cdscan_cli.py
+    main | ToonSerializer | cdscan_cli.py
+    __init__ | RipgrepSearcher | run_code_review.py
+    __init__ | datetime.now().astimezone | run_code_review.py
+    __init__ | CtagsIndexer | run_code_review.py
+    __init__ | datetime.now().astimezone().isoformat | run_code_review.py
+    __init__ | Path | run_code_review.py
+    __init__ | datetime.now | run_code_review.py
+    __init__ | logging.getLogger | run_code_review.py
+    __init__ | UgrepSearcher | run_code_review.py
+    __init__ | TreeSitterAnalyzer | run_code_review.py
+    __init__ | Path(workspace).resolve | run_code_review.py
+    __init__ | logging.basicConfig | run_code_review.py
+    __init__ | AstGrepAnalyzer | run_code_review.py
+    __init__ | self.logger.info | run_code_review.py
+    __init__ | self.logger.warning | run_code_review.py
+    _omit_empty | data.items | run_code_review.py
+    _omit_empty | self._omit_empty | run_code_review.py
+    analyze | self._run_ugrep_analysis | run_code_review.py
+    analyze | self.logger.error | run_code_review.py
+    analyze | self._synthesize_results | run_code_review.py
+    analyze | self._run_ctags_analysis | run_code_review.py
+    analyze | self._validate_workspace | run_code_review.py
+    analyze | self.logger.info | run_code_review.py
+    analyze | self._run_ripgrep_analysis | run_code_review.py
+    analyze | self._run_tree_sitter_analysis | run_code_review.py
+    analyze | self._run_astgrep_analysis | run_code_review.py
+    _validate_workspace | self.workspace.glob | run_code_review.py
+    _validate_workspace | self.logger.error | run_code_review.py
+    _validate_workspace | self.workspace.exists | run_code_review.py
+    _validate_workspace | self.workspace.is_dir | run_code_review.py
+code_quality:
+  test_coverage_estimate: "Very Low (estimated <20%)"
+recommendations:
+  [1]
+  Increase test coverage: only 0 test files for 12 source files

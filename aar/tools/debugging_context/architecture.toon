@@ -1,0 +1,137 @@
+timestamp: "2025-12-31T09:00:00+00:00"
+system_definition:
+  name: "Automated Test Repair Payload Generator"
+  goal: "Synthesize static analysis (TOON) and dynamic test results (Pytest) to generate context-aware fix proposals for LLM-based code repair with smart deduplication and success handling."
+  runtime: "Python 3.10+"
+
+modules:
+  [5] {name, path, responsibility, dependencies}
+  RepairWorkflowEngine | src/pipeline_orchestrator.py |
+    "Controls the entire workflow, manages data flow between modules, handles success/failure branches, and executes top-level exceptions handling. Main entry point that routes to success or failure paths based on pytest exit code." |
+    ["report_context_loader", "test_suite_executor", "failure_context_mapper", "toon_payload_generator"]
+  
+  ReportContextLoader | src/artifact_manager.py |
+    "Handles ingestion of static analysis artifacts. Parses 'qa_report.toon' and 'structure.toon' into in-memory structures for AST scope mapping and quality metrics lookup." |
+    ["pathlib", "json", "toon_parser_lib"]
+  
+  TestSuiteExecutor | src/verification_runner.py |
+    "Manages test execution and parses pytest results. Executes pytest with structured output, returns ExecutionResult with exit_code and failure metadata. Handles both success and failure states." |
+    ["subprocess", "xml.etree.ElementTree", "pytest"]
+  
+  FailureContextMapper | src/context_resolver.py |
+    "Bridges runtime errors with static structure. Implements smart failure deduplication using SHA-256 signatures, then enriches unique failures by mapping to AST nodes and static QA issues." |
+    ["typing", "hashlib", "interval_tree"]
+  
+  ToonPayloadGenerator | src/prompt_builder.py |
+    "Constructs final payloads. Serializes enriched failure contexts into TOON format (fix_payload.toon) or generates minimal success notices when no failures exist." |
+    ["datetime", "textwrap", "hashlib"]
+
+data_structures:
+  [5] {type, description, fields}
+  ExecutionResult | "Test execution result from TestSuiteExecutor containing execution metadata." |
+    [{'exit_code': 'int', 'total_tests': 'int', 'failed_tests': 'int', 'report_path': 'Path'}]
+  
+  FailureData | "Object representing a single test failure with deduplication signature." |
+    [{'test_id': 'str', 'source_file': 'str', 'line_number': 'int', 'error_type': 'str', 'error_message': 'str', 'traceback': 'str', 'signature': 'str'}]
+  
+  RichContext | "Enriched error context after mapping to AST nodes and static QA issues." |
+    [{'failure': 'FailureData', 'related_code': 'str', 'ast_scope': 'str', 'static_errors': 'List[str]', 'deduplication_note': 'str'}]
+  
+  StaticMap | "Lookup table containing parsed static analysis data from ReportContextLoader." |
+    [{'structure_map': 'Dict[Path, List[Node]]', 'quality_map': 'Dict[Path, List[Issue]]'}]
+  
+  FixPayload | "Final payload object for LLM transmission, either fix request or success notice." |
+    [{'timestamp': 'str', 'status': 'str', 'message': 'str', 'total_failures': 'int', 'contexts': 'List[RichContext]'}]
+
+logic_flow:
+  step_1_initialization:
+    module: RepairWorkflowEngine
+    action: "Load configuration and verify workspace path."
+    validation: "Check for existence of 'qa_report.toon' and 'structure.toon'."
+
+  step_2_execute_tests:
+    module: TestSuiteExecutor
+    input: ["workspace_path"]
+    process:
+      - "Execute subprocess.run(['pytest', '--junitxml=report.xml'])."
+      - "Return ExecutionResult with exit_code, total_tests, failed_tests, report_path."
+    output: "Returns ExecutionResult object."
+
+  step_3_branch_decision:
+    module: RepairWorkflowEngine
+    input: ["ExecutionResult"]
+    decision_logic:
+      - "IF result.exit_code == 0: Call ToonPayloadGenerator.construct_success_notice, save payload, terminate."
+      - "ELSE: Continue to artifact loading and failure processing."
+
+  step_4_load_artifacts:
+    module: ReportContextLoader
+    input: ["structure.toon", "qa_report.toon"]
+    process:
+      - "Parse structure.toon -> Create mapping of AST Nodes by FilePath."
+      - "Parse qa_report.toon -> Create mapping of Linter/Security Issues by FilePath."
+    output: "Returns StaticMap object."
+
+  step_5_extract_failures:
+    module: TestSuiteExecutor
+    input: ["report_path"]
+    process:
+      - "Parse JUnit XML report to filter items with status='failed'."
+      - "Extract source_file, line_number, error_type, error_message, traceback."
+      - "Convert findings into a list of FailureData objects."
+    output: "Returns List[FailureData]."
+
+  step_6_deduplicate_failures:
+    module: FailureContextMapper
+    input: ["List[FailureData]"]
+    process:
+      - "Generate SHA-256 signature for each failure: hash(f'{error_type}:{error_message}:{stack_trace_frames}')."
+      - "Group failures by signature into Dict[str, List[FailureData]]."
+      - "Select first occurrence as Representative Case for each group."
+      - "Optionally append deduplication note with count of similar failures."
+    output: "Returns List[FailureData] (deduplicated)."
+
+  step_7_resolve_context:
+    module: FailureContextMapper
+    input: ["List[FailureData] (deduplicated)", "StaticMap"]
+    process:
+      - "For each representative failure:"
+      - "  Identify AST Node (Function/Class) containing line_number from structure_map."
+      - "  Identify QA Issues existing in source_file from quality_map."
+      - "  Slice source code (apply Context Window)."
+      - "  Create and append RichContext object with deduplication_note."
+    output: "Returns List[RichContext]."
+
+  step_8_generate_payload:
+    module: ToonPayloadGenerator
+    input: ["List[RichContext]"]
+    process:
+      - "Load TOON format template."
+      - "Inject RichContext data into the template (Serialization)."
+      - "Save as 'fix_payload.toon'."
+    output: "File Write: fix_payload.toon"
+
+  step_9_success_branch:
+    module: ToonPayloadGenerator
+    input: []
+    process:
+      - "Generate minimal success payload with status='success', message='All tests passed.'"
+      - "Save as 'fix_payload.toon'."
+    output: "File Write: fix_payload.toon (success)"
+
+error_handling:
+  strategies:
+    - "System Error (Pytest execution failure): Abort pipeline immediately and log the error."
+    - "Missing Artifacts: Log a warning and proceed without the missing static context."
+    - "Mapping Failure (Line mismatch): Fallback to using the full file context."
+    - "Empty Failures List: Generate success notice payload instead of fix request."
+    - "Deduplication Failure: If signature generation fails, process all failures without deduplication."
+
+constraints:
+  - "Minimize Code Duplication: Common utilities must be separated into a 'utils' package."
+  - "Path Handling: Must use 'pathlib.Path.resolve()' for cross-platform compatibility (Windows/Linux)."
+  - "Performance: Use Interval Search or Hash Maps for AST lookup instead of linear search."
+  - "Modularity: Each step must be testable independently (Loose Coupling)."
+  - "Deduplication: Failure signatures must use SHA-256 hash of normalized error data (error_type:error_message:stack_trace_frames)."
+  - "Token Efficiency: Deduplication is required to prevent context window overflow when foundational modules fail."
+  - "Success Handling: Success branch must generate minimal payload and terminate immediately without processing artifacts."

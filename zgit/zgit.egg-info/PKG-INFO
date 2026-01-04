@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: zgit
+Version: 0.1.0
+Summary: Context-preserving git commits using zagi with automatic context storage via --prompt flag
+Author: Developer
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: black>=23.0.0; extra == "dev"

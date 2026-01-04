@@ -1,0 +1,81 @@
+# ARR TDD Requirements - Critical Issues Resolution
+
+## Context
+The ARR (Adaptive Recursive Repair Agent) system has several critical issues that need to be resolved using TDD methodology. This document outlines the requirements for fixing these issues.
+
+## Critical Issues to Address
+
+### 1. Path Resolution Bug (Priority: HIGH)
+**Problem:** When arr.py repair is executed from one directory but pytest runs from a different working directory, patch application fails due to path mismatches.
+
+**Root Cause:** The patch.file_path is generated with absolute paths in _call_llm_mock(), but pytest execution context may have a different CWD, causing the patch manager to fail file existence checks.
+
+**Requirements:**
+- Implement path resolution logic that correctly handles both relative and absolute paths
+- Ensure patch application works regardless of the current working directory
+- Add path validation before patch generation
+- Create tests for path resolution in different contexts
+
+**Affected Components:**
+- src/modules/patch_manager.py:apply_patch()
+- src/agent_orchestrator.py:_call_llm_mock()
+- src/agent_orchestrator.py:_run_iteration()
+
+### 2. Type Checking Errors (Priority: LOW but should be fixed)
+**Problem:** Type checker reports errors for optional types in agent_orchestrator.py
+
+**Errors:**
+- Line 160:34 - "recorder" is not a known attribute of "None"
+- Line 179:47 - "pruner" is not a known attribute of "None"
+- Line 183:24 - Operator "/" not supported for "None"
+
+**Root Cause:** The history_manager is typed as HistoryManager | None but used without null checks.
+
+**Requirements:**
+- Add proper type guards or early initialization for history_manager
+- Ensure all None-handled types are properly checked before use
+- Create tests to verify type safety
+- Pass type checking without errors
+
+**Affected Components:**
+- src/agent_orchestrator.py (multiple lines)
+
+## Implementation Requirements
+
+### General Requirements
+1. All code must pass type checking (mypy or equivalent)
+2. All new features must have comprehensive unit tests
+3. Follow existing code style and conventions
+4. Maintain backward compatibility
+5. Document all changes
+
+### Path Resolution Specific Requirements
+1. Create a PathResolver utility class/module
+2. Support both absolute and relative paths
+3. Add path normalization logic
+4. Validate file existence before patch application
+5. Create test cases for:
+   - Absolute path scenarios
+   - Relative path scenarios
+   - Mixed path scenarios (absolute test file, relative source files)
+   - Cross-directory execution scenarios
+
+### Type Safety Specific Requirements
+1. Add type guards for history_manager usage
+2. Initialize history_manager early or use assert statements
+3. Ensure all Optional types are properly handled
+4. Create tests that verify type safety
+
+## Success Criteria
+1. All tests pass
+2. Type checking passes without errors
+3. Path resolution works in all scenarios
+4. Code follows existing patterns and conventions
+5. Test coverage >= 80%
+
+## Constraints
+- Module size: Maximum 300 lines per file (excluding blank lines & imports)
+- Module hierarchy: Maximum 2 levels of nesting
+- English-only identifiers
+- No reserved keywords
+- Minimal comments (only for complex algorithmic logic)

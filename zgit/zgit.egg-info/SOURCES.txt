@@ -1,0 +1,9 @@
+pyproject.toml
+zgit.py
+zgit_cli.py
+zgit.egg-info/PKG-INFO
+zgit.egg-info/SOURCES.txt
+zgit.egg-info/dependency_links.txt
+zgit.egg-info/entry_points.txt
+zgit.egg-info/requires.txt
+zgit.egg-info/top_level.txt

@@ -1,0 +1,10 @@
+active_context
+  {iteration:4}
+  active_history[0]
+  current_failures[6]
+    failure{test_calculator.py::test_add::AssertionError}
+    failure{test_calculator.py::test_subtract::AssertionError}
+    failure{test_calculator.py::test_multiply::AssertionError}
+    failure{test_calculator.py::test_factorial::RecursionError:}
+    failure{test_calculator.py::test_is_prime::AssertionError}
+    failure{test_calculator.py::test_fibonacci::AssertionError}

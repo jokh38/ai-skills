@@ -1,0 +1,11 @@
+# Knowledge Kernel for RRD
+# Stores failure patterns and solutions for learning across sessions
+
+failures:
+  [0] {signature, count, first_seen, last_seen, solution, tags, status, criticality}
+
+patterns:
+  [0] {pattern, occurrences, fix, tags}
+
+# Criticality levels: high | medium | low
+# Status values: ACTIVE | RESOLVED | BLOCKED

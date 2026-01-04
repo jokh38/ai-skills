@@ -1,0 +1,103 @@
+timestamp: "2025-12-31T06:53:46.341259+00:00"
+workspace: /home/vscode/.claude/skills/code_QA
+user_request: 
+codebase_summary:
+  total_files: 8
+  total_functions: 44
+  total_classes: 6
+  total_symbols: 0
+  primary_language: python
+structure_analysis:
+  files:
+    [8] {path, language, functions, classes, imports}
+    run_QA.py | python | [{'name': '__init__', 'line': 32, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'analyze', 'line': 77, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': '_synthesize_results', 'line': 109, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': '_calculate_quality_score', 'line': 174, 'params': ['self'], 'complexity': 3, 'nesting_depth': 3}, {'name': '_build_critical_issues', 'line': 196, 'params': ['self'], 'complexity': 11, 'nesting_depth': 3}, {'name': '_format_ruff_results', 'line': 254, 'params': ['self'], 'complexity': 2, 'nesting_depth': 3}, {'name': '_format_mypy_results', 'line': 270, 'params': ['self'], 'complexity': 2, 'nesting_depth': 3}, {'name': '_format_semgrep_results', 'line': 287, 'params': ['self'], 'complexity': 2, 'nesting_depth': 3}, {'name': '_format_radon_results', 'line': 302, 'params': ['self'], 'complexity': 2, 'nesting_depth': 3}, {'name': '_generate_immediate_fixes', 'line': 317, 'params': ['self'], 'complexity': 10, 'nesting_depth': 3}, {'name': '_generate_next_steps', 'line': 360, 'params': ['self'], 'complexity': 5, 'nesting_depth': 3}, {'name': 'main', 'line': 384, 'params': [], 'complexity': 5, 'nesting_depth': 1}] | [{'name': 'CodeQualityChecker', 'line': 29, 'methods': ['__init__', 'analyze', '_synthesize_results', '_calculate_quality_score', '_build_critical_issues', '_format_ruff_results', '_format_mypy_results', '_format_semgrep_results', '_format_radon_results', '_generate_immediate_fixes', '_generate_next_steps']}] | [{'statement': 'import argparse', 'line': 12}, {'statement': 'import logging', 'line': 13}, {'statement': 'import sys', 'line': 14}, {'statement': 'from pathlib import Path', 'line': 15}, {'statement': 'from datetime import datetime', 'line': 16}, {'statement': 'from typing import Dict, Any, List', 'line': 17}, {'statement': 'from ruff_checker import RuffChecker', 'line': 22}, {'statement': 'from mypy_analyzer import MypyAnalyzer', 'line': 23}, {'statement': 'from semgrep_scanner import SemgrepScanner', 'line': 24}, {'statement': 'from radon_metrics import RadonMetrics', 'line': 25}, {'statement': 'from toon_serializer import ToonSerializer', 'line': 26}, {'statement': 'import traceback', 'line': 460}]
+    __init__.py | python | [] | [] | []
+    tools/semgrep_scanner.py | python | [{'name': '__init__', 'line': 17, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'scan', 'line': 27, 'params': ['self'], 'complexity': 6, 'nesting_depth': 3}, {'name': '_process_results', 'line': 88, 'params': ['self'], 'complexity': 6, 'nesting_depth': 3}, {'name': '_empty_results', 'line': 157, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}] | [{'name': 'SemgrepScanner', 'line': 14, 'methods': ['__init__', 'scan', '_process_results', '_empty_results']}] | [{'statement': 'import json', 'line': 7}, {'statement': 'import subprocess', 'line': 8}, {'statement': 'from pathlib import Path', 'line': 9}, {'statement': 'from typing import Dict, List, Any', 'line': 10}, {'statement': 'import logging', 'line': 11}]
+    tools/mypy_analyzer.py | python | [{'name': '__init__', 'line': 17, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'analyze', 'line': 27, 'params': ['self'], 'complexity': 8, 'nesting_depth': 3}, {'name': '_process_results', 'line': 86, 'params': ['self'], 'complexity': 8, 'nesting_depth': 3}, {'name': '_extract_error_code', 'line': 174, 'params': ['self'], 'complexity': 4, 'nesting_depth': 3}, {'name': '_empty_results', 'line': 184, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}] | [{'name': 'MypyAnalyzer', 'line': 14, 'methods': ['__init__', 'analyze', '_process_results', '_extract_error_code', '_empty_results']}] | [{'statement': 'import json', 'line': 7}, {'statement': 'import subprocess', 'line': 8}, {'statement': 'from pathlib import Path', 'line': 9}, {'statement': 'from typing import Dict, List, Any', 'line': 10}, {'statement': 'import logging', 'line': 11}]
+    tools/ruff_checker.py | python | [{'name': '__init__', 'line': 17, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'check', 'line': 27, 'params': ['self'], 'complexity': 6, 'nesting_depth': 3}, {'name': '_process_results', 'line': 84, 'params': ['self'], 'complexity': 6, 'nesting_depth': 3}, {'name': '_empty_results', 'line': 160, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}] | [{'name': 'RuffChecker', 'line': 14, 'methods': ['__init__', 'check', '_process_results', '_empty_results']}] | [{'statement': 'import json', 'line': 7}, {'statement': 'import subprocess', 'line': 8}, {'statement': 'from pathlib import Path', 'line': 9}, {'statement': 'from typing import Dict, List, Any, Optional', 'line': 10}, {'statement': 'import logging', 'line': 11}]
+    tools/__init__.py | python | [] | [] | []
+    tools/toon_serializer.py | python | [{'name': '__init__', 'line': 28, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'serialize', 'line': 37, 'params': ['self'], 'complexity': 4, 'nesting_depth': 3}, {'name': '_serialize_dict', 'line': 58, 'params': ['self'], 'complexity': 7, 'nesting_depth': 3}, {'name': '_serialize_list', 'line': 82, 'params': ['self'], 'complexity': 7, 'nesting_depth': 3}, {'name': '_is_uniform_list', 'line': 107, 'params': ['self'], 'complexity': 4, 'nesting_depth': 3}, {'name': '_serialize_uniform_list', 'line': 123, 'params': ['self'], 'complexity': 3, 'nesting_depth': 3}, {'name': '_serialize_primitive', 'line': 155, 'params': ['self'], 'complexity': 9, 'nesting_depth': 3}, {'name': 'dumps', 'line': 183, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'dump', 'line': 195, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'dumps', 'line': 208, 'params': [], 'complexity': 1, 'nesting_depth': 1}, {'name': 'dump', 'line': 223, 'params': [], 'complexity': 1, 'nesting_depth': 1}] | [{'name': 'ToonSerializer', 'line': 25, 'methods': ['__init__', 'serialize', '_serialize_dict', '_serialize_list', '_is_uniform_list', '_serialize_uniform_list', '_serialize_primitive', 'dumps', 'dump']}] | [{'statement': 'from typing import Any, Dict, List, Union', 'line': 21}, {'statement': 'from datetime import datetime', 'line': 22}]
+    tools/radon_metrics.py | python | [{'name': '__init__', 'line': 17, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'measure', 'line': 27, 'params': ['self'], 'complexity': 3, 'nesting_depth': 3}, {'name': '_run_complexity', 'line': 64, 'params': ['self'], 'complexity': 3, 'nesting_depth': 3}, {'name': '_run_maintainability', 'line': 90, 'params': ['self'], 'complexity': 3, 'nesting_depth': 3}, {'name': '_process_results', 'line': 114, 'params': ['self'], 'complexity': 9, 'nesting_depth': 3}, {'name': '_complexity_to_grade', 'line': 176, 'params': ['self'], 'complexity': 5, 'nesting_depth': 3}, {'name': '_mi_to_grade', 'line': 189, 'params': ['self'], 'complexity': 5, 'nesting_depth': 3}, {'name': '_empty_results', 'line': 202, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}] | [{'name': 'RadonMetrics', 'line': 14, 'methods': ['__init__', 'measure', '_run_complexity', '_run_maintainability', '_process_results', '_complexity_to_grade', '_mi_to_grade', '_empty_results']}] | [{'statement': 'import json', 'line': 7}, {'statement': 'import subprocess', 'line': 8}, {'statement': 'from pathlib import Path', 'line': 9}, {'statement': 'from typing import Dict, List, Any', 'line': 10}, {'statement': 'import logging', 'line': 11}]
+  complexity_hotspots:
+    []
+  design_patterns:
+    []
+definition_index:
+  public_apis:
+    []
+  internal_functions:
+    []
+  symbol_categories:
+
+pattern_findings:
+  existing_tests:
+    count: 0
+    files:
+      []
+    frameworks:
+      []
+  error_handling:
+    language: python
+    try_blocks:
+      []
+    raise_statements:
+      []
+    except_clauses:
+      []
+    total_error_handlers: 0
+  technical_debt:
+    total_count: 0
+    by_type:
+      TODO: 0
+      FIXME: 0
+      HACK: 0
+      XXX: 0
+      NOTE: 0
+    locations:
+      []
+  import_graph:
+    total_imports: 34
+    unique_modules: 14
+    external_dependencies:
+      [14]
+      argparse
+      datetime
+      json
+      logging
+      mypy_analyzer
+      pathlib
+      radon_metrics
+      ruff_checker
+      semgrep_scanner
+      subprocess
+      sys
+      toon_serializer
+      traceback
+      typing
+    most_imported:
+      - ('typing', 6)
+      - ('logging', 5)
+      - ('pathlib', 5)
+      - ('json', 4)
+      - ('subprocess', 4)
+      - ('datetime', 2)
+      - ('argparse', 1)
+      - ('sys', 1)
+      - ('ruff_checker', 1)
+      - ('mypy_analyzer', 1)
+      - ('semgrep_scanner', 1)
+      - ('radon_metrics', 1)
+      - ('toon_serializer', 1)
+      - ('traceback', 1)
+    source: ast
+code_quality:
+  complexity_hotspots:
+    []
+  security_concerns:
+    []
+  test_coverage_estimate: "Very Low (estimated <20%)"
+recommendations:
+  [1]
+  Increase test coverage: only 0 test files for 8 source files
+integration_points:
+  []

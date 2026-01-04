@@ -1,0 +1,154 @@
+timestamp: "2025-12-31T07:33:10.378936+00:00"
+workspace: /home/vscode/.claude/skills/ARR
+user_request: 
+codebase_summary:
+  total_files: 48
+  total_functions: 331
+  total_classes: 47
+  total_symbols: 0
+  primary_language: python
+structure_analysis:
+  files:
+    [20] {path, language, functions, classes, imports}
+    demo.py | python | [{'name': 'main', 'line': 13, 'params': [], 'complexity': 5, 'nesting_depth': 1}] | [] | [{'statement': 'import sys', 'line': 4}, {'statement': 'from pathlib import Path', 'line': 5}, {'statement': 'from agent_orchestrator import AgentOrchestrator', 'line': 10}, {'statement': 'from modules.data_types import Config', 'line': 11}, {'statement': 'import os', 'line': 17}]
+    arr.py | python | [] | [] | [{'statement': 'import sys', 'line': 4}, {'statement': 'from pathlib import Path', 'line': 5}, {'statement': 'from src.cli import main', 'line': 12}]
+    src/cli.py | python | [{'name': 'main', 'line': 9, 'params': [], 'complexity': 4, 'nesting_depth': 1}, {'name': 'run_repair', 'line': 109, 'params': ['args'], 'complexity': 10, 'nesting_depth': 1}, {'name': 'show_status', 'line': 182, 'params': ['args'], 'complexity': 6, 'nesting_depth': 1}, {'name': 'list_sessions', 'line': 223, 'params': ['args'], 'complexity': 5, 'nesting_depth': 1}] | [] | [{'statement': 'import sys', 'line': 4}, {'statement': 'import argparse', 'line': 5}, {'statement': 'from pathlib import Path', 'line': 6}, {'statement': 'import os', 'line': 111}, {'statement': 'import logging', 'line': 112}, {'statement': 'import sys', 'line': 113}, {'statement': 'from pathlib import Path', 'line': 114}, {'statement': 'from agent_orchestrator import AgentOrchestrator', 'line': 121}, {'statement': 'from modules.data_types import Config', 'line': 122}, {'statement': 'import traceback', 'line': 177}, {'statement': 'import os', 'line': 184}, {'statement': 'import json', 'line': 185}, {'statement': 'from pathlib import Path', 'line': 186}, {'statement': 'import json', 'line': 225}]
+    src/__init__.py | python | [{'name': 'run_repair_session', 'line': 8, 'params': ['target_file'], 'complexity': 1, 'nesting_depth': 1}] | [] | [{'statement': 'from agent_orchestrator import AgentOrchestrator', 'line': 19}]
+    src/agent_orchestrator.py | python | [{'name': '__init__', 'line': 62, 'params': ['self'], 'complexity': 10, 'nesting_depth': 3}, {'name': 'generate', 'line': 103, 'params': ['self'], 'complexity': 3, 'nesting_depth': 3}, {'name': 'request_fix', 'line': 129, 'params': ['self', 'context'], 'complexity': 7, 'nesting_depth': 3}, {'name': '_build_prompt', 'line': 163, 'params': ['self', 'context'], 'complexity': 1, 'nesting_depth': 3}, {'name': '_format_history', 'line': 187, 'params': ['self'], 'complexity': 3, 'nesting_depth': 3}, {'name': '_format_failures', 'line': 196, 'params': ['self'], 'complexity': 3, 'nesting_depth': 3}, {'name': '_call_llm_mock', 'line': 205, 'params': ['self', 'context'], 'complexity': 13, 'nesting_depth': 3}, {'name': '_call_llm', 'line': 297, 'params': ['self'], 'complexity': 2, 'nesting_depth': 3}, {'name': 'validate_toon_format', 'line': 311, 'params': ['self'], 'complexity': 7, 'nesting_depth': 3}, {'name': '_parse_patch_response', 'line': 345, 'params': ['self'], 'complexity': 3, 'nesting_depth': 3}, {'name': '_add_format_reminder', 'line': 375, 'params': ['self', 'context'], 'complexity': 1, 'nesting_depth': 3}, {'name': '__init__', 'line': 386, 'params': ['self'], 'complexity': 9, 'nesting_depth': 3}, {'name': 'run_repair_session', 'line': 439, 'params': ['self'], 'complexity': 6, 'nesting_depth': 3}, {'name': '_run_iteration', 'line': 492, 'params': ['self'], 'complexity': 8, 'nesting_depth': 3}, {'name': '_init_session', 'line': 591, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'validate_session_state', 'line': 616, 'params': ['self'], 'complexity': 2, 'nesting_depth': 3}, {'name': 'detect_cycles', 'line': 620, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'run_repair_session', 'line': 626, 'params': [], 'complexity': 1, 'nesting_depth': 1}] | [{'name': 'LLMAdapter', 'line': 59, 'methods': ['__init__', 'generate', 'request_fix', '_build_prompt', '_format_history', '_format_failures', '_call_llm_mock', '_call_llm', 'validate_toon_format', '_parse_patch_response', '_add_format_reminder']}, {'name': 'AgentOrchestrator', 'line': 383, 'methods': ['__init__', 'run_repair_session', '_run_iteration', '_init_session', 'validate_session_state', 'detect_cycles']}] | [{'statement': 'from pathlib import Path', 'line': 3}, {'statement': 'from datetime import datetime', 'line': 4}, {'statement': 'import logging', 'line': 5}, {'statement': 'import os', 'line': 6}, {'statement': 'import json', 'line': 7}, {'statement': 'import importlib.util', 'line': 8}, {'statement': 'from typing import Optional', 'line': 9}, {'statement': 'from modules.data_types import (\n    PatchToon,\n    Config,\n)', 'line': 11}, {'statement': 'from modules.static_fixer import StaticFixer', 'line': 15}, {'statement': 'from modules.debugging_context import DebuggingContext', 'line': 16}, {'statement': 'from modules.history_manager import HistoryManager', 'line': 17}, {'statement': 'from modules.cycle_detector import CycleDetector', 'line': 18}, {'statement': 'from modules.patch_manager import PatchManager', 'line': 19}, {'statement': 'from modules.toon_utils import ToonEncoder, ToonParser', 'line': 20}, {'statement': 'from dotenv import load_dotenv', 'line': 32}, {'statement': 'import re', 'line': 207}, {'statement': 'from pathlib import Path', 'line': 208}, {'statement': 'import re', 'line': 325}, {'statement': 'import re', 'line': 348}]
+    tools/debugging_context/__main__.py | python | [] | [] | [{'statement': 'import sys', 'line': 1}, {'statement': 'from pathlib import Path', 'line': 2}, {'statement': 'from src.pipeline_orchestrator import main', 'line': 6}]
+    tools/code_QA/run_QA.py | python | [{'name': '__init__', 'line': 32, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'analyze', 'line': 77, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': '_synthesize_results', 'line': 109, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': '_calculate_quality_score', 'line': 174, 'params': ['self'], 'complexity': 3, 'nesting_depth': 3}, {'name': '_build_critical_issues', 'line': 196, 'params': ['self'], 'complexity': 11, 'nesting_depth': 3}, {'name': '_format_ruff_results', 'line': 254, 'params': ['self'], 'complexity': 2, 'nesting_depth': 3}, {'name': '_format_mypy_results', 'line': 270, 'params': ['self'], 'complexity': 2, 'nesting_depth': 3}, {'name': '_format_semgrep_results', 'line': 287, 'params': ['self'], 'complexity': 2, 'nesting_depth': 3}, {'name': '_format_radon_results', 'line': 302, 'params': ['self'], 'complexity': 2, 'nesting_depth': 3}, {'name': '_generate_immediate_fixes', 'line': 317, 'params': ['self'], 'complexity': 10, 'nesting_depth': 3}, {'name': '_generate_next_steps', 'line': 360, 'params': ['self'], 'complexity': 5, 'nesting_depth': 3}, {'name': 'main', 'line': 384, 'params': [], 'complexity': 5, 'nesting_depth': 1}] | [{'name': 'CodeQualityChecker', 'line': 29, 'methods': ['__init__', 'analyze', '_synthesize_results', '_calculate_quality_score', '_build_critical_issues', '_format_ruff_results', '_format_mypy_results', '_format_semgrep_results', '_format_radon_results', '_generate_immediate_fixes', '_generate_next_steps']}] | [{'statement': 'import argparse', 'line': 12}, {'statement': 'import logging', 'line': 13}, {'statement': 'import sys', 'line': 14}, {'statement': 'from pathlib import Path', 'line': 15}, {'statement': 'from datetime import datetime', 'line': 16}, {'statement': 'from typing import Dict, Any, List', 'line': 17}, {'statement': 'from ruff_checker import RuffChecker', 'line': 22}, {'statement': 'from mypy_analyzer import MypyAnalyzer', 'line': 23}, {'statement': 'from semgrep_scanner import SemgrepScanner', 'line': 24}, {'statement': 'from radon_metrics import RadonMetrics', 'line': 25}, {'statement': 'from toon_serializer import ToonSerializer', 'line': 26}, {'statement': 'import traceback', 'line': 460}]
+    tools/code_QA/__init__.py | python | [] | [] | []
+    tools/code_analyzer/__init__.py | python | [] | [] | []
+    tools/code_analyzer/run_code_review.py | python | [{'name': '__init__', 'line': 31, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'analyze', 'line': 95, 'params': ['self'], 'complexity': 2, 'nesting_depth': 3}, {'name': '_validate_workspace', 'line': 129, 'params': ['self'], 'complexity': 4, 'nesting_depth': 3}, {'name': '_run_tree_sitter_analysis', 'line': 150, 'params': ['self'], 'complexity': 2, 'nesting_depth': 3}, {'name': '_run_ctags_analysis', 'line': 161, 'params': ['self'], 'complexity': 3, 'nesting_depth': 3}, {'name': '_run_ripgrep_analysis', 'line': 179, 'params': ['self'], 'complexity': 4, 'nesting_depth': 3}, {'name': '_synthesize_results', 'line': 205, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': '_identify_design_patterns', 'line': 259, 'params': ['self'], 'complexity': 9, 'nesting_depth': 3}, {'name': '_format_security_concerns', 'line': 298, 'params': ['self'], 'complexity': 2, 'nesting_depth': 3}, {'name': '_get_security_recommendation', 'line': 312, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': '_estimate_test_coverage', 'line': 323, 'params': ['self'], 'complexity': 5, 'nesting_depth': 3}, {'name': '_generate_recommendations', 'line': 342, 'params': ['self'], 'complexity': 7, 'nesting_depth': 3}, {'name': '_identify_integration_points', 'line': 386, 'params': ['self'], 'complexity': 4, 'nesting_depth': 3}, {'name': 'cleanup', 'line': 422, 'params': ['self'], 'complexity': 2, 'nesting_depth': 3}, {'name': 'main', 'line': 430, 'params': [], 'complexity': 5, 'nesting_depth': 1}] | [{'name': 'CodeReviewAnalyzer', 'line': 28, 'methods': ['__init__', 'analyze', '_validate_workspace', '_run_tree_sitter_analysis', '_run_ctags_analysis', '_run_ripgrep_analysis', '_synthesize_results', '_identify_design_patterns', '_format_security_concerns', '_get_security_recommendation', '_estimate_test_coverage', '_generate_recommendations', '_identify_integration_points', 'cleanup']}] | [{'statement': 'import argparse', 'line': 12}, {'statement': 'import logging', 'line': 13}, {'statement': 'import sys', 'line': 14}, {'statement': 'from pathlib import Path', 'line': 15}, {'statement': 'from datetime import datetime', 'line': 16}, {'statement': 'from typing import Dict, Any, List', 'line': 17}, {'statement': 'from treesitter_analyzer import TreeSitterAnalyzer', 'line': 22}, {'statement': 'from ctags_indexer import CtagsIndexer', 'line': 23}, {'statement': 'from ripgrep_searcher import RipgrepSearcher', 'line': 24}, {'statement': 'from toon_serializer import ToonSerializer', 'line': 25}, {'statement': 'import traceback', 'line': 534}]
+    tools/code_analyzer/analyze.py | python | [{'name': 'analyze', 'line': 9, 'params': [], 'complexity': 1, 'nesting_depth': 1}, {'name': 'main', 'line': 21, 'params': [], 'complexity': 4, 'nesting_depth': 1}] | [] | [{'statement': 'import argparse', 'line': 2}, {'statement': 'import sys', 'line': 3}, {'statement': 'from pathlib import Path', 'line': 4}, {'statement': 'from run_code_review import CodeReviewAnalyzer', 'line': 6}, {'statement': 'import json', 'line': 34}, {'statement': 'import traceback', 'line': 61}]
+    tools/LLM_api/config.py | python | [{'name': '__init__', 'line': 10, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'get_llm_provider', 'line': 16, 'params': ['self'], 'complexity': 5, 'nesting_depth': 3}, {'name': 'prompts_file', 'line': 50, 'params': ['self'], 'complexity': 1, 'nesting_depth': 4}] | [{'name': 'ConfigLoader', 'line': 7, 'methods': ['__init__', 'get_llm_provider']}] | [{'statement': 'import os', 'line': 2}, {'statement': 'from pathlib import Path', 'line': 3}, {'statement': 'from typing import Dict, Any', 'line': 4}]
+    tools/LLM_api/llm_client.py | python | [{'name': '__init__', 'line': 10, 'params': ['self'], 'complexity': 1, 'nesting_depth': 6}, {'name': 'get_llm_provider', 'line': 16, 'params': ['self'], 'complexity': 5, 'nesting_depth': 6}, {'name': 'prompts_file', 'line': 44, 'params': ['self'], 'complexity': 1, 'nesting_depth': 7}, {'name': '__init__', 'line': 54, 'params': ['self'], 'complexity': 2, 'nesting_depth': 3}, {'name': 'prompts_file', 'line': 68, 'params': ['self'], 'complexity': 2, 'nesting_depth': 4}, {'name': 'prompts_file', 'line': 74, 'params': ['self'], 'complexity': 1, 'nesting_depth': 4}, {'name': 'generate', 'line': 79, 'params': ['self'], 'complexity': 3, 'nesting_depth': 3}, {'name': 'generate_with_schema', 'line': 102, 'params': ['self'], 'complexity': 2, 'nesting_depth': 3}, {'name': 'generate_agentic', 'line': 113, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'execute_tool', 'line': 138, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'get_file_tools_schema', 'line': 142, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'load_prompt', 'line': 148, 'params': ['self'], 'complexity': 3, 'nesting_depth': 3}, {'name': '_parse_toon_prompts', 'line': 162, 'params': ['self'], 'complexity': 20, 'nesting_depth': 3}, {'name': 'render_prompt', 'line': 216, 'params': ['self'], 'complexity': 4, 'nesting_depth': 3}, {'name': 'main', 'line': 234, 'params': [], 'complexity': 16, 'nesting_depth': 1}] | [{'name': 'ConfigLoader', 'line': 9, 'methods': ['__init__', 'get_llm_provider']}, {'name': 'LLMClient', 'line': 51, 'methods': ['__init__', 'generate', 'generate_with_schema', 'generate_agentic', 'execute_tool', 'get_file_tools_schema', 'load_prompt', '_parse_toon_prompts', 'render_prompt']}] | [{'statement': 'import os', 'line': 1}, {'statement': 'from typing import Dict, Any, Optional, List', 'line': 2}, {'statement': 'from pathlib import Path', 'line': 3}, {'statement': 'from .config import ConfigLoader', 'line': 6}, {'statement': 'from .src import ProviderManager, ToolManager, AgentEngine', 'line': 48}, {'statement': 'import argparse', 'line': 235}, {'statement': 'from dotenv import load_dotenv', 'line': 239}, {'statement': 'import traceback', 'line': 360}, {'statement': 'import sys', 'line': 366}]
+    tools/LLM_api/__init__.py | python | [] | [] | [{'statement': 'from .llm_client import LLMClient', 'line': 2}, {'statement': 'from .config import ConfigLoader', 'line': 3}, {'statement': 'from .src import ProviderManager, ToolManager, AgentEngine', 'line': 4}]
+    tools/debugging_context/utils/data_structures.py | python | [] | [{'name': 'ExecutionResult', 'line': 7, 'methods': []}, {'name': 'FailureData', 'line': 15, 'methods': []}, {'name': 'RichContext', 'line': 26, 'methods': []}, {'name': 'StaticMap', 'line': 49, 'methods': []}, {'name': 'FixPayload', 'line': 55, 'methods': []}] | [{'statement': 'from dataclasses import dataclass, field', 'line': 1}, {'statement': 'from pathlib import Path', 'line': 2}, {'statement': 'from typing import Any, Dict, List, Optional', 'line': 3}]
+    tools/debugging_context/utils/path_utils.py | python | [{'name': 'normalize_path', 'line': 4, 'params': [], 'complexity': 1, 'nesting_depth': 1}, {'name': 'ensure_dir_exists', 'line': 8, 'params': [], 'complexity': 1, 'nesting_depth': 1}] | [] | [{'statement': 'from pathlib import Path', 'line': 1}]
+    tools/debugging_context/utils/__init__.py | python | [] | [] | []
+    tools/debugging_context/utils/toon_parser.py | python | [{'name': 'parse_toon_file', 'line': 6, 'params': [], 'complexity': 34, 'nesting_depth': 1}, {'name': 'parse_value', 'line': 91, 'params': [], 'complexity': 7, 'nesting_depth': 1}, {'name': 'write_toon_file', 'line': 108, 'params': [], 'complexity': 3, 'nesting_depth': 1}, {'name': 'write_toon_value', 'line': 118, 'params': [], 'complexity': 6, 'nesting_depth': 1}, {'name': 'format_value', 'line': 134, 'params': [], 'complexity': 3, 'nesting_depth': 1}] | [] | [{'statement': 'from pathlib import Path', 'line': 1}, {'statement': 'from typing import Any, Dict, Optional, Union, List, TextIO', 'line': 2}, {'statement': 'import re', 'line': 3}]
+    tools/debugging_context/src/artifact_manager.py | python | [{'name': 'load_structure_map', 'line': 17, 'params': ['self'], 'complexity': 8, 'nesting_depth': 3}, {'name': 'load_quality_metrics', 'line': 41, 'params': ['self'], 'complexity': 8, 'nesting_depth': 3}, {'name': 'load_static_context', 'line': 65, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}] | [{'name': 'ReportContextLoader', 'line': 15, 'methods': ['load_structure_map', 'load_quality_metrics', 'load_static_context']}] | [{'statement': 'import sys', 'line': 1}, {'statement': 'from pathlib import Path', 'line': 2}, {'statement': 'from typing import Any, Dict, List', 'line': 3}, {'statement': 'import logging', 'line': 4}, {'statement': 'from utils.data_structures import StaticMap', 'line': 8}, {'statement': 'from utils.path_utils import normalize_path', 'line': 9}, {'statement': 'from utils.toon_parser import parse_toon_file', 'line': 10}]
+    tools/debugging_context/src/pipeline_orchestrator.py | python | [{'name': '__init__', 'line': 22, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': '_ensure_structure_toon', 'line': 28, 'params': ['self'], 'complexity': 3, 'nesting_depth': 3}, {'name': '_ensure_qa_report_toon', 'line': 46, 'params': ['self'], 'complexity': 3, 'nesting_depth': 3}, {'name': 'execute_pipeline', 'line': 64, 'params': ['self'], 'complexity': 4, 'nesting_depth': 3}, {'name': 'handle_exception', 'line': 110, 'params': ['self'], 'complexity': 1, 'nesting_depth': 3}, {'name': 'main', 'line': 115, 'params': [], 'complexity': 3, 'nesting_depth': 1}] | [{'name': 'RepairWorkflowEngine', 'line': 20, 'methods': ['__init__', '_ensure_structure_toon', '_ensure_qa_report_toon', 'execute_pipeline', 'handle_exception']}] | [{'statement': 'import logging', 'line': 1}, {'statement': 'import sys', 'line': 2}, {'statement': 'import subprocess', 'line': 3}, {'statement': 'from pathlib import Path', 'line': 4}, {'statement': 'from src.artifact_manager import ReportContextLoader', 'line': 8}, {'statement': 'from src.verification_runner import TestSuiteExecutor', 'line': 9}, {'statement': 'from src.context_resolver import FailureContextMapper', 'line': 10}, {'statement': 'from src.prompt_builder import ToonPayloadGenerator', 'line': 11}, {'statement': 'import argparse', 'line': 116}]
+  complexity_hotspots:
+    []
+  design_patterns:
+    -
+      pattern: Singleton
+      location: "tools/LLM_api/src/tools.py:6"
+      element: ToolManager
+    -
+      pattern: Singleton
+      location: "tools/LLM_api/src/providers.py:8"
+      element: ProviderManager
+    -
+      pattern: Singleton
+      location: "src/modules/history_manager.py:276"
+      element: HistoryManager
+    -
+      pattern: Singleton
+      location: "src/modules/patch_manager.py:15"
+      element: PatchManager
+definition_index:
+  public_apis:
+    []
+  internal_functions:
+    []
+  symbol_categories:
+
+pattern_findings:
+  existing_tests:
+    count: 0
+    files:
+      []
+    frameworks:
+      [3]
+      junit
+      pytest
+      unittest
+  error_handling:
+    language: python
+    try_blocks:
+      []
+    raise_statements:
+      []
+    except_clauses:
+      []
+    total_error_handlers: 0
+  technical_debt:
+    total_count: 0
+    by_type:
+      TODO: 0
+      FIXME: 0
+      HACK: 0
+      XXX: 0
+      NOTE: 0
+    locations:
+      []
+  import_graph:
+    total_imports: 253
+    unique_modules: 67
+    external_dependencies:
+      [30]
+      agent_orchestrator
+      anthropic
+      argparse
+      ast
+      ctags_indexer
+      dataclasses
+      datetime
+      dotenv
+      hashlib
+      httpx
+      importlib.util
+      json
+      logging
+      modules.cycle_detector
+      modules.data_types
+      modules.debugging_context
+      modules.history_manager
+      modules.patch_manager
+      modules.static_fixer
+      modules.toon_utils
+      mypy_analyzer
+      ollama
+      openai
+      os
+      pathlib
+      radon_metrics
+      re
+      ripgrep_searcher
+      ruff_checker
+      run_code_review
+    most_imported:
+      - ('pathlib', 34)
+      - ('typing', 29)
+      - ('logging', 21)
+      - ('re', 19)
+      - ('sys', 17)
+      - ('json', 13)
+      - ('modules.data_types', 11)
+      - ('subprocess', 10)
+      - ('os', 9)
+      - ('datetime', 8)
+      - ('argparse', 6)
+      - ('traceback', 5)
+      - ('modules.toon_utils', 4)
+      - ('utils.data_structures', 4)
+      - ('agent_orchestrator', 3)
+    source: ast
+code_quality:
+  complexity_hotspots:
+    []
+  security_concerns:
+    []
+  test_coverage_estimate: "Very Low (estimated <20%)"
+recommendations:
+  [1]
+  Increase test coverage: only 0 test files for 48 source files
+integration_points:
+  -
+    type: "External APIs"
+    libraries:
+      [1]
+      httpx

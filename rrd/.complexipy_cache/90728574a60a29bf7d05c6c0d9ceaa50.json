@@ -1,0 +1,643 @@
+{
+  "functions": [
+    {
+      "complexity": 0,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::_resolve_tool_paths",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::analysis",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::cycle_detection",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::get_quality_gates",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::is_incremental_mode",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::knowledge_kernel",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::llm",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::patch_management",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::paths",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::quality_gates",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::tools",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "config_loader.py",
+      "function_name": "load_rrd_config",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::__init__",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::_resolve_path_template",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::_to_path",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::get_path",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::get_tool_path",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::_load_config",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::_resolve_tools_section",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 3,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::are_paths_equal",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 3,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::to_config",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "config_loader.py",
+      "function_name": "RRDConfig::_resolve_paths_section",
+      "path": "rrd/core/config_loader.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "cycle_detector.py",
+      "function_name": "CycleDetector::__init__",
+      "path": "rrd/core/cycle_detector.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "cycle_detector.py",
+      "function_name": "CycleDetector::_update_patch_state",
+      "path": "rrd/core/cycle_detector.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "cycle_detector.py",
+      "function_name": "CycleDetector::get_state",
+      "path": "rrd/core/cycle_detector.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "cycle_detector.py",
+      "function_name": "CycleDetector::reset",
+      "path": "rrd/core/cycle_detector.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "cycle_detector.py",
+      "function_name": "CycleDetector::_is_exact_duplicate",
+      "path": "rrd/core/cycle_detector.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "cycle_detector.py",
+      "function_name": "CycleDetector::_is_same_location",
+      "path": "rrd/core/cycle_detector.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "cycle_detector.py",
+      "function_name": "CycleDetector::update_history",
+      "path": "rrd/core/cycle_detector.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "cycle_detector.py",
+      "function_name": "CycleDetector::check_signature_cycle",
+      "path": "rrd/core/cycle_detector.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "cycle_detector.py",
+      "function_name": "CycleDetector::detect_pattern",
+      "path": "rrd/core/cycle_detector.py"
+    },
+    {
+      "complexity": 6,
+      "file_name": "cycle_detector.py",
+      "function_name": "CycleDetector::_calculate_code_similarity",
+      "path": "rrd/core/cycle_detector.py"
+    },
+    {
+      "complexity": 7,
+      "file_name": "cycle_detector.py",
+      "function_name": "CycleDetector::check_duplicate_patch",
+      "path": "rrd/core/cycle_detector.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "data_types.py",
+      "function_name": "CycleDetectionState::reset",
+      "path": "rrd/core/data_types.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "data_types.py",
+      "function_name": "FailureSignature::__hash__",
+      "path": "rrd/core/data_types.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "data_types.py",
+      "function_name": "FailureSignature::__str__",
+      "path": "rrd/core/data_types.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "data_types.py",
+      "function_name": "PatchToon::__hash__",
+      "path": "rrd/core/data_types.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "data_types.py",
+      "function_name": "FailureSignature::__eq__",
+      "path": "rrd/core/data_types.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "data_types.py",
+      "function_name": "Config::from_env",
+      "path": "rrd/core/data_types.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "history_manager.py",
+      "function_name": "ContextPruner::__init__",
+      "path": "rrd/core/history_manager.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "history_manager.py",
+      "function_name": "ContextPruner::get_last_pruned_items",
+      "path": "rrd/core/history_manager.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "history_manager.py",
+      "function_name": "ContextPruner::reset",
+      "path": "rrd/core/history_manager.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "history_manager.py",
+      "function_name": "HistoryManager::__init__",
+      "path": "rrd/core/history_manager.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "history_manager.py",
+      "function_name": "HistoryManager::get_pruner",
+      "path": "rrd/core/history_manager.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "history_manager.py",
+      "function_name": "HistoryManager::get_recorder",
+      "path": "rrd/core/history_manager.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "history_manager.py",
+      "function_name": "HistoryManager::save_session_summary",
+      "path": "rrd/core/history_manager.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "history_manager.py",
+      "function_name": "SessionRecorder::__init__",
+      "path": "rrd/core/history_manager.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "history_manager.py",
+      "function_name": "SessionRecorder::get_session_history",
+      "path": "rrd/core/history_manager.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "history_manager.py",
+      "function_name": "SessionRecorder::save_session_summary",
+      "path": "rrd/core/history_manager.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "history_manager.py",
+      "function_name": "ContextPruner::log_attempt",
+      "path": "rrd/core/history_manager.py"
+    },
+    {
+      "complexity": 3,
+      "file_name": "history_manager.py",
+      "function_name": "ContextPruner::is_active",
+      "path": "rrd/core/history_manager.py"
+    },
+    {
+      "complexity": 3,
+      "file_name": "history_manager.py",
+      "function_name": "ContextPruner::mark_resolved",
+      "path": "rrd/core/history_manager.py"
+    },
+    {
+      "complexity": 3,
+      "file_name": "history_manager.py",
+      "function_name": "SessionRecorder::append_log",
+      "path": "rrd/core/history_manager.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "history_manager.py",
+      "function_name": "ContextPruner::get_active_context",
+      "path": "rrd/core/history_manager.py"
+    },
+    {
+      "complexity": 7,
+      "file_name": "history_manager.py",
+      "function_name": "SessionRecorder::_encode_log_entry",
+      "path": "rrd/core/history_manager.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::__init__",
+      "path": "rrd/core/patch_manager.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::_apply_code_replacement",
+      "path": "rrd/core/patch_manager.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::_read_file_content",
+      "path": "rrd/core/patch_manager.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::atomic_write",
+      "path": "rrd/core/patch_manager.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::create_backup",
+      "path": "rrd/core/patch_manager.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::restore_backup",
+      "path": "rrd/core/patch_manager.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::_rollback_on_failure",
+      "path": "rrd/core/patch_manager.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::_find_single_line_match",
+      "path": "rrd/core/patch_manager.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::_locate_and_validate_code_match",
+      "path": "rrd/core/patch_manager.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::_resolve_file_path",
+      "path": "rrd/core/patch_manager.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::_validate_line_range",
+      "path": "rrd/core/patch_manager.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::are_paths_equal",
+      "path": "rrd/core/patch_manager.py"
+    },
+    {
+      "complexity": 5,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::verify_patch",
+      "path": "rrd/core/patch_manager.py"
+    },
+    {
+      "complexity": 6,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::_find_multiline_match",
+      "path": "rrd/core/patch_manager.py"
+    },
+    {
+      "complexity": 9,
+      "file_name": "patch_manager.py",
+      "function_name": "PatchManager::apply_patch",
+      "path": "rrd/core/patch_manager.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonEncoder::__init__",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonEncoder::encode_failure_signature",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonEncoder::encode_patch_toon",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonEncoder::encode_session_summary",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonParser::__init__",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonParser::parse",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonSerializer::__init__",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonSerializer::dump",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonSerializer::dumps",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonSerializer::serialize_to_file",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_utils.py",
+      "function_name": "dump",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_utils.py",
+      "function_name": "dumps",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_utils.py",
+      "function_name": "encode_toon",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_utils.py",
+      "function_name": "parse_toon",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_utils.py",
+      "function_name": "write_toon_file",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonEncoder::_encode_table",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonEncoder::_escape_value",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonParser::_extract_array_size",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonParser::_extract_headers",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonParser::_parse_dict_line",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 1,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonParser::parse_failure_payload",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonEncoder::encode_active_context",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonSerializer::_is_uniform_list",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonSerializer::_serialize_uniform_list",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "toon_utils.py",
+      "function_name": "parse_toon_file",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 3,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonParser::_handle_array_result",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 3,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonParser::_parse_array_section",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonEncoder::encode",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 4,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonSerializer::serialize",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 5,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonEncoder::_encode_dict",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 5,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonEncoder::_encode_list",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 7,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonParser::_parse_array",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 7,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonSerializer::_serialize_dict",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 9,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonParser::_parse_lines",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 9,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonSerializer::_serialize_list",
+      "path": "rrd/core/toon_utils.py"
+    },
+    {
+      "complexity": 10,
+      "file_name": "toon_utils.py",
+      "function_name": "ToonSerializer::_serialize_primitive",
+      "path": "rrd/core/toon_utils.py"
+    }
+  ],
+  "targets": [
+    "/home/vscode/.claude/skills/rrd"
+  ]
+}

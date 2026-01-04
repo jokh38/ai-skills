@@ -1,0 +1,99 @@
+# ARR Context Type Schemas in TOON format
+# These define the rich context structures used for debugging and repair
+
+# =============================================================================
+# Execution Types
+# =============================================================================
+
+ExecutionResult:
+  description: "Result of test execution"
+  fields:
+    [4] {name, type, required, description}
+    exit_code | int | true | Process exit code
+    total_tests | int | true | Total number of tests run
+    failed_tests | int | true | Number of failed tests
+    report_path | Path | true | Path to detailed report
+
+# =============================================================================
+# Failure Data
+# =============================================================================
+
+FailureData:
+  description: "Detailed data about a single test failure"
+  fields:
+    [7] {name, type, required, description}
+    test_id | str | true | Unique test identifier
+    source_file | str | true | Path to source file
+    line_number | int | true | Line number of failure
+    error_type | str | true | Type of error
+    error_message | str | true | Error message text
+    traceback | str | true | Full traceback
+    signature | str | true | Unique failure signature
+
+# =============================================================================
+# Rich Context (Tiered Error Classification)
+# =============================================================================
+
+RichContext:
+  description: "Enriched context for a failure with tiered classification"
+  fields:
+    [17] {name, type, required, default, description}
+    failure | FailureData | true | null | The base failure data
+    related_code | str | true | "" | Code snippet around failure
+    ast_scope | str | true | "" | AST scope information
+    static_errors | list[str] | true | [] | Static analysis errors
+    deduplication_note | str | true | "" | Notes about duplicate failures
+    error_class | str | true | "" | Tier classification (import/runtime/assertion/etc)
+    stack_trace | list[dict] | false | [] | Parsed stack trace frames
+    locals_snapshot | dict | false | null | Local variables at failure
+    related_symbols | list[dict] | false | [] | Related symbol definitions
+    import_chain | list[dict] | false | [] | Import dependency chain
+    search_paths | list[dict] | false | [] | Module search paths
+    expected_vs_actual | dict | false | null | For assertion errors
+    call_context | dict | false | null | Function call context
+    test_context | dict | false | null | Test setup/fixture context
+    missing_resources | list[dict] | false | [] | Missing files/resources
+    config_state | dict | false | null | Configuration state
+    missing_vars | list[str] | false | [] | Missing environment variables
+    rule_info | dict | false | null | Linting rule information
+    suggested_fix | dict | false | null | Suggested fix from analysis
+
+# =============================================================================
+# Error Class Tiers (for classification)
+# =============================================================================
+
+ErrorClassTiers:
+  description: "Error classification tiers for prioritization"
+  tiers:
+    [6] {tier, class, priority, description}
+    1 | import | highest | Import/module resolution errors
+    2 | runtime | high | Runtime exceptions (TypeError, ValueError, etc)
+    3 | assertion | medium | Test assertion failures
+    4 | test_infra | low | Test infrastructure issues
+    5 | config | low | Configuration/environment errors
+    6 | lint | lowest | Linting/style issues
+
+# =============================================================================
+# Static Analysis Map
+# =============================================================================
+
+StaticMap:
+  description: "Combined static analysis results"
+  fields:
+    [2] {name, type, description}
+    structure_map | dict[Path, list] | Code structure by file
+    quality_map | dict[Path, list] | Quality issues by file
+
+# =============================================================================
+# Fix Payload (LLM Request)
+# =============================================================================
+
+FixPayload:
+  description: "Payload sent to LLM for fix generation"
+  fields:
+    [5] {name, type, required, description}
+    timestamp | str | true | ISO format timestamp
+    status | str | true | Current status (needs_fix/success)
+    message | str | true | Human-readable message
+    total_failures | int | true | Number of failures
+    contexts | list[RichContext] | true | Rich context for each failure

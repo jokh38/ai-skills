@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "adaptive-repair-agent"
+version = "2.1"
+description = "Auditable & Context-Aware Auto-Repair System"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "Repair Agent Team"}
+]
+
+dependencies = [
+    "ruff>=0.1.0",
+    "pytest>=7.0.0",
+    "pydantic>=2.0.0",
+    "httpx>=0.24.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/example/adaptive-repair-agent"
+
+[project.scripts]
+arr = "cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["modules*"]
+
+[tool.setuptools.package-dir]
+"" = "."
+
+[tool.setuptools.py-modules]
+cli = "cli"
