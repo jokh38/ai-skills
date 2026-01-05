@@ -9,6 +9,8 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 import logging
 
+from utils import check_tool_availability, parse_tool_output
+
 
 class UgrepSearcher:
     """Wrapper for ugrep advanced search."""
@@ -26,22 +28,7 @@ class UgrepSearcher:
 
     def _check_ugrep(self) -> bool:
         """Check if ugrep is installed."""
-        try:
-            result = subprocess.run(
-                ['ugrep', '--version'],
-                capture_output=True,
-                text=True,
-                timeout=5
-            )
-            if result.returncode == 0:
-                self.logger.info(f"ugrep found: {result.stdout.strip()}")
-                return True
-            else:
-                self.logger.warning("ugrep not available")
-                return False
-        except (subprocess.TimeoutExpired, FileNotFoundError) as e:
-            self.logger.warning(f"ugrep not found: {e}")
-            return False
+        return check_tool_availability(["ugrep", "--version"], "ugrep")
 
     def search_archives(self, pattern: str, max_results: int = 100) -> List[Dict]:
         """
@@ -63,21 +50,18 @@ class UgrepSearcher:
                 "-z",  # Search archives
                 "-r",  # Recursive
                 "-l",  # List matching files
-                "-C", "2",  # 2 lines context
-                "--max-count", str(max_results),
+                "-C",
+                "2",  # 2 lines context
+                "--max-count",
+                str(max_results),
                 pattern,
-                str(self.workspace)
+                str(self.workspace),
             ]
 
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=120
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
 
             if result.stdout:
-                return self._parse_ugrep_output(result.stdout, pattern, search_type='archive')
+                return parse_tool_output(result.stdout, pattern, search_type="code")
             return []
 
         except subprocess.TimeoutExpired:
@@ -87,7 +71,9 @@ class UgrepSearcher:
             self.logger.error(f"ugrep archive search failed: {e}")
             return []
 
-    def fuzzy_search(self, pattern: str, distance: int = 2, max_results: int = 100) -> List[Dict]:
+    def fuzzy_search(
+        self, pattern: str, distance: int = 2, max_results: int = 100
+    ) -> List[Dict]:
         """
         Fuzzy pattern matching with edit distance.
 
@@ -108,20 +94,16 @@ class UgrepSearcher:
                 f"-Z{distance}",  # Fuzzy with edit distance
                 "-r",  # Recursive
                 "-n",  # Line numbers
-                "--max-count", str(max_results),
+                "--max-count",
+                str(max_results),
                 pattern,
-                str(self.workspace)
+                str(self.workspace),
             ]
 
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=120
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
 
             if result.stdout:
-                return self._parse_ugrep_output(result.stdout, pattern, search_type='fuzzy')
+                return parse_tool_output(result.stdout, pattern, search_type="fuzzy")
             return []
 
         except subprocess.TimeoutExpired:
@@ -152,20 +134,16 @@ class UgrepSearcher:
                 "-z",  # Handle archives (PDF is treated as archive)
                 "-r",
                 "-n",
-                "--max-count", str(max_results),
+                "--max-count",
+                str(max_results),
                 pattern,
-                str(self.workspace)
+                str(self.workspace),
             ]
 
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=120
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
 
             if result.stdout:
-                return self._parse_ugrep_output(result.stdout, pattern, search_type='pdf')
+                return parse_tool_output(result.stdout, pattern, search_type="pdf")
             else:
                 self.logger.info("PDF search returned no results (requires pdftotext)")
                 return []
@@ -197,20 +175,16 @@ class UgrepSearcher:
                 "--bool",  # Enable boolean search
                 "-r",
                 "-n",
-                "--max-count", str(max_results),
+                "--max-count",
+                str(max_results),
                 pattern,
-                str(self.workspace)
+                str(self.workspace),
             ]
 
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=120
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
 
             if result.stdout:
-                return self._parse_ugrep_output(result.stdout, pattern, search_type='boolean')
+                return parse_tool_output(result.stdout, pattern, search_type="boolean")
             return []
 
         except subprocess.TimeoutExpired:
@@ -221,10 +195,7 @@ class UgrepSearcher:
             return []
 
     def search_code(
-        self,
-        pattern: str,
-        file_type: Optional[str] = None,
-        max_results: int = 100
+        self, pattern: str, file_type: Optional[str] = None, max_results: int = 100
     ) -> List[Dict]:
         """
         Search code with ugrep (alternative to ripgrep).
@@ -245,7 +216,8 @@ class UgrepSearcher:
                 "ugrep",
                 "-r",
                 "-n",
-                "--max-count", str(max_results),
+                "--max-count",
+                str(max_results),
             ]
 
             # Add file type filter if specified
@@ -254,15 +226,10 @@ class UgrepSearcher:
 
             cmd.extend([pattern, str(self.workspace)])
 
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=60
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
 
             if result.stdout:
-                return self._parse_ugrep_output(result.stdout, pattern, search_type='code')
+                return parse_tool_output(result.stdout, pattern, search_type="code")
             return []
 
         except subprocess.TimeoutExpired:
@@ -272,7 +239,9 @@ class UgrepSearcher:
             self.logger.error(f"ugrep code search failed: {e}")
             return []
 
-    def search_documentation(self, keywords: List[str], max_results: int = 50) -> Dict[str, Any]:
+    def search_documentation(
+        self, keywords: List[str], max_results: int = 50
+    ) -> Dict[str, Any]:
         """
         Search for documentation patterns across codebase.
 
@@ -284,7 +253,7 @@ class UgrepSearcher:
             Dictionary with documentation findings
         """
         if not self.available:
-            return {'total': 0, 'findings': []}
+            return {"total": 0, "findings": []}
 
         findings = []
 
@@ -292,53 +261,20 @@ class UgrepSearcher:
             # Search for keyword in docstrings and comments
             patterns = [
                 rf'["\']{keyword}["\']',  # In strings (docstrings)
-                rf'# {keyword}',  # In comments
+                rf"# {keyword}",  # In comments
             ]
 
             for pattern in patterns:
                 matches = self.search_code(pattern, max_results=max_results)
                 for match in matches:
-                    match['keyword'] = keyword
+                    match["keyword"] = keyword
                     findings.append(match)
 
         return {
-            'total': len(findings),
-            'keywords_searched': keywords,
-            'findings': findings[:100]  # Limit results
+            "total": len(findings),
+            "keywords_searched": keywords,
+            "findings": findings[:100],  # Limit results
         }
-
-    def _parse_ugrep_output(self, output: str, pattern: str, search_type: str = 'code') -> List[Dict]:
-        """
-        Parse ugrep output into structured format.
-
-        Args:
-            output: Raw ugrep output
-            pattern: Search pattern used
-            search_type: Type of search performed
-
-        Returns:
-            List of structured matches
-        """
-        matches = []
-        lines = output.strip().split('\n')
-
-        for line in lines:
-            if not line.strip():
-                continue
-
-            # Parse line format: file:line:content
-            if ':' in line:
-                parts = line.split(':', 2)
-                if len(parts) >= 2:
-                    matches.append({
-                        'file': parts[0],
-                        'line': int(parts[1]) if parts[1].isdigit() else 0,
-                        'content': parts[2] if len(parts) > 2 else '',
-                        'pattern': pattern,
-                        'search_type': search_type,
-                    })
-
-        return matches[:200]  # Limit results
 
     def get_summary(self) -> Dict[str, Any]:
         """
@@ -348,18 +284,18 @@ class UgrepSearcher:
             Dictionary with availability and features
         """
         return {
-            'available': self.available,
-            'features': {
-                'archive_search': self.available,
-                'fuzzy_search': self.available,
-                'pdf_search': self.available,
-                'boolean_search': self.available,
-                'tui_mode': self.available,
-            }
+            "available": self.available,
+            "features": {
+                "archive_search": self.available,
+                "fuzzy_search": self.available,
+                "pdf_search": self.available,
+                "boolean_search": self.available,
+                "tui_mode": self.available,
+            },
         }
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
 
     if len(sys.argv) > 1:
@@ -368,21 +304,23 @@ if __name__ == '__main__':
 
         if searcher.available:
             print("Testing ugrep search capabilities...")
-            
+
             # Test fuzzy search
             print("\n1. Fuzzy search for 'functon' (typo of 'function'):")
-            results = searcher.fuzzy_search('functon', distance=2, max_results=5)
+            results = searcher.fuzzy_search("functon", distance=2, max_results=5)
             for match in results[:3]:
                 print(f"  {match['file']}:{match['line']} - {match['content'][:60]}")
-            
+
             # Test code search
             print("\n2. Code search for 'import':")
-            results = searcher.search_code('import', file_type='py', max_results=5)
+            results = searcher.search_code("import", file_type="py", max_results=5)
             for match in results[:3]:
                 print(f"  {match['file']}:{match['line']} - {match['content'][:60]}")
-            
+
             print(f"\nSummary: {searcher.get_summary()}")
         else:
-            print("ugrep not available. Install with: brew install ugrep (macOS) or apt-get install ugrep (Linux)")
+            print(
+                "ugrep not available. Install with: brew install ugrep (macOS) or apt-get install ugrep (Linux)"
+            )
     else:
         print("Usage: python ugrep_searcher.py <workspace_path>")

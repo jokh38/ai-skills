@@ -15,13 +15,14 @@ from textwrap import dedent
 sys.path.insert(0, str(Path(__file__).parent))
 
 from run_code_review import CodeReviewAnalyzer, ToonSerializer
+from tools.utils import print_analysis_summary
 
 
 def create_parser() -> argparse.ArgumentParser:
     """Create and configure argument parser with comprehensive help."""
     parser = argparse.ArgumentParser(
-        prog='cdscan',
-        description=dedent('''
+        prog="cdscan",
+        description=dedent("""
             CDSCAN - Code Structure Scanner
 
             Multi-tool codebase analysis that combines:
@@ -31,8 +32,8 @@ def create_parser() -> argparse.ArgumentParser:
 
             Ideal for understanding unfamiliar codebases, code reviews,
             and preparing context for LLM-assisted development.
-        '''),
-        epilog=dedent('''
+        """),
+        epilog=dedent("""
             Examples:
               # Basic analysis of current directory
               cdscan --workspace .
@@ -64,89 +65,83 @@ def create_parser() -> argparse.ArgumentParser:
             Exit Codes:
               0: Analysis completed successfully
               1: Analysis failed or interrupted
-        '''),
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        """),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
     # Required arguments
     parser.add_argument(
-        '--workspace',
+        "--workspace",
         required=True,
-        metavar='PATH',
-        help='Project directory to analyze (required)'
+        metavar="PATH",
+        help="Project directory to analyze (required)",
     )
 
     # Optional arguments
     parser.add_argument(
-        '--pattern',
-        default='**/*.py',
-        metavar='GLOB',
-        help='File glob pattern to analyze (default: **/*.py)'
+        "--pattern",
+        default="**/*.py",
+        metavar="GLOB",
+        help="File glob pattern to analyze (default: **/*.py)",
     )
 
     parser.add_argument(
-        '--language',
-        default='python',
-        metavar='LANG',
-        help='Primary programming language (default: python)'
+        "--language",
+        default="python",
+        metavar="LANG",
+        help="Primary programming language (default: python)",
     )
 
     parser.add_argument(
-        '--output',
-        metavar='FILE',
-        help='Output file path (default: <workspace>/codebase_structure.toon)'
+        "--output",
+        metavar="FILE",
+        help="Output file path (default: <workspace>/codebase_structure.toon)",
     )
 
     parser.add_argument(
-        '--request',
-        default='',
-        metavar='TEXT',
-        help='User request/context for the analysis'
+        "--request",
+        default="",
+        metavar="TEXT",
+        help="User request/context for the analysis",
     )
 
     parser.add_argument(
-        '--verbose',
-        action='store_true',
-        help='Enable verbose logging output'
+        "--verbose", action="store_true", help="Enable verbose logging output"
     )
 
     parser.add_argument(
-        '--max-files',
+        "--max-files",
         type=int,
         default=20,
-        metavar='N',
-        help='Maximum number of files to include in results (default: 20)'
+        metavar="N",
+        help="Maximum number of files to include in results (default: 20)",
     )
 
     parser.add_argument(
-        '--max-hotspots',
+        "--max-hotspots",
         type=int,
         default=15,
-        metavar='N',
-        help='Maximum number of complexity hotspots (default: 15)'
+        metavar="N",
+        help="Maximum number of complexity hotspots (default: 15)",
     )
 
     parser.add_argument(
-        '--max-apis',
+        "--max-apis",
         type=int,
         default=20,
-        metavar='N',
-        help='Maximum number of public APIs to list (default: 20)'
+        metavar="N",
+        help="Maximum number of public APIs to list (default: 20)",
     )
 
     parser.add_argument(
-        '--max-search-results',
+        "--max-search-results",
         type=int,
         default=100,
-        metavar='N',
-        help='Maximum search results per pattern (default: 100)'
+        metavar="N",
+        help="Maximum search results per pattern (default: 100)",
     )
 
-    parser.add_argument(
-        '--version',
-        action='version',
-        version='%(prog)s 0.1.0'
-    )
+    parser.add_argument("--version", action="version", version="%(prog)s 0.1.0")
 
     return parser
 
@@ -166,7 +161,7 @@ def main():
         max_files=args.max_files,
         max_hotspots=args.max_hotspots,
         max_apis=args.max_apis,
-        max_search_results=args.max_search_results
+        max_search_results=args.max_search_results,
     )
 
     try:
@@ -177,19 +172,14 @@ def main():
         if args.output:
             output_file = Path(args.output)
         else:
-            output_file = Path(args.workspace) / 'codebase_structure.toon'
+            output_file = Path(args.workspace) / "codebase_structure.toon"
 
         # Write results in TOON format
         serializer = ToonSerializer(indent_size=2)
         serializer.dump(results, str(output_file))
 
         print(f"\n✅ Analysis complete! Results written to: {output_file}")
-        print("\n📊 Summary:")
-        print(f"  Files analyzed: {results['codebase_summary'].get('total_files', 0)}")
-        print(f"  Functions found: {results['codebase_summary'].get('total_functions', 0)}")
-        print(f"  Classes found: {results['codebase_summary'].get('total_classes', 0)}")
-        print(f"  Security issues: {len(results['code_quality'].get('security_concerns', []))}")
-        print(f"  Recommendations: {len(results['recommendations'])}")
+        print_analysis_summary(results)
 
         return 0
 
@@ -200,11 +190,12 @@ def main():
         print(f"\n❌ Analysis failed: {e}")
         if args.verbose:
             import traceback
+
             traceback.print_exc()
         return 1
     finally:
         analyzer.cleanup()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

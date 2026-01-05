@@ -10,6 +10,8 @@ from pathlib import Path
 from typing import Dict, List, Any
 import logging
 
+from utils import check_tool_availability
+
 
 class AstGrepAnalyzer:
     """Wrapper for ast-grep structural search and linting."""
@@ -27,27 +29,13 @@ class AstGrepAnalyzer:
 
     def _check_astgrep(self) -> bool:
         """Check if ast-grep is installed."""
-        try:
-            result = subprocess.run(
-                ['ast-grep', '--version'],
-                capture_output=True,
-                text=True,
-                timeout=5
-            )
-            if result.returncode == 0:
-                self.logger.info(f"ast-grep found: {result.stdout.strip()}")
-                return True
-            else:
-                self.logger.warning("ast-grep not available")
-                return False
+        return check_tool_availability(['ast-grep', '--version'], 'ast-grep')
         except (subprocess.TimeoutExpired, FileNotFoundError) as e:
             self.logger.warning(f"ast-grep not found: {e}")
             return False
 
     def search_pattern(
-        self,
-        pattern: str,
-        language: str = "python"
+        self, pattern: str, language: str = "python"
     ) -> List[Dict[str, Any]]:
         """
         Search for structural pattern.
@@ -66,18 +54,15 @@ class AstGrepAnalyzer:
             cmd = [
                 "ast-grep",
                 "scan",
-                "--pattern", pattern,
-                "--lang", language,
+                "--pattern",
+                pattern,
+                "--lang",
+                language,
                 "--json",
-                str(self.workspace)
+                str(self.workspace),
             ]
 
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=60
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
 
             if result.stdout:
                 return json.loads(result.stdout)
@@ -110,17 +95,13 @@ class AstGrepAnalyzer:
             cmd = [
                 "ast-grep",
                 "scan",
-                "--config", rules_file,
+                "--config",
+                rules_file,
                 "--json",
-                str(self.workspace)
+                str(self.workspace),
             ]
 
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=120
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
 
             if result.stdout:
                 data = json.loads(result.stdout)
@@ -131,10 +112,7 @@ class AstGrepAnalyzer:
             self.logger.error(f"ast-grep lint failed: {e}")
             return {"total": 0, "findings": []}
 
-    def find_common_patterns(
-        self,
-        language: str = "python"
-    ) -> Dict[str, List[Dict]]:
+    def find_common_patterns(self, language: str = "python") -> Dict[str, List[Dict]]:
         """
         Search for common code patterns.
 
@@ -153,7 +131,9 @@ class AstGrepAnalyzer:
         for pattern_name, pattern in patterns.items():
             matches = self.search_pattern(pattern, language)
             if matches:
-                results[pattern_name] = self._format_pattern_matches(matches, pattern_name)
+                results[pattern_name] = self._format_pattern_matches(
+                    matches, pattern_name
+                )
 
         return results
 
@@ -180,18 +160,22 @@ class AstGrepAnalyzer:
             }
         return {}
 
-    def _format_pattern_matches(self, matches: List[Dict], pattern_type: str) -> List[Dict]:
+    def _format_pattern_matches(
+        self, matches: List[Dict], pattern_type: str
+    ) -> List[Dict]:
         """Format pattern matches for output."""
         formatted = []
 
         for match in matches:
-            formatted.append({
-                'file': match.get('file', ''),
-                'line': match.get('range', {}).get('start', {}).get('line', 0),
-                'column': match.get('range', {}).get('start', {}).get('column', 0),
-                'code': match.get('text', '')[:200],  # Limit code snippet
-                'pattern': pattern_type,
-            })
+            formatted.append(
+                {
+                    "file": match.get("file", ""),
+                    "line": match.get("range", {}).get("start", {}).get("line", 0),
+                    "column": match.get("range", {}).get("start", {}).get("column", 0),
+                    "code": match.get("text", "")[:200],  # Limit code snippet
+                    "pattern": pattern_type,
+                }
+            )
 
         return formatted[:20]  # Limit results
 
@@ -200,21 +184,20 @@ class AstGrepAnalyzer:
         findings = []
 
         for item in data.get("results", []):
-            findings.append({
-                "file": item.get("file", ""),
-                "line": item.get("range", {}).get("start", {}).get("line", 0),
-                "rule": item.get("rule", ""),
-                "message": item.get("message", ""),
-                "severity": item.get("severity", "warning")
-            })
+            findings.append(
+                {
+                    "file": item.get("file", ""),
+                    "line": item.get("range", {}).get("start", {}).get("line", 0),
+                    "rule": item.get("rule", ""),
+                    "message": item.get("message", ""),
+                    "severity": item.get("severity", "warning"),
+                }
+            )
 
-        return {
-            "total": len(findings),
-            "findings": findings
-        }
+        return {"total": len(findings), "findings": findings}
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
 
     if len(sys.argv) > 1:
