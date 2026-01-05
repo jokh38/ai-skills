@@ -4,6 +4,12 @@ import re
 
 
 def parse_toon_file(path: Path) -> Dict[str, Any]:
+    """
+    Parse a TOON file into Python dictionary.
+
+    Note: This is a simplified parser. For full TOON spec v3.0 compliance,
+    consider using a dedicated TOON library when available.
+    """
     data: Dict[str, Any] = {}
     current_section: Optional[str] = None
     section_data: Optional[Union[Dict[str, Any], List[Any]]] = None
@@ -87,6 +93,11 @@ def parse_toon_file(path: Path) -> Dict[str, Any]:
 
 
 def parse_value(value: str) -> Any:
+    """
+    Parse a string value into appropriate Python type.
+
+    Note: Simplified parser. Full TOON spec requires proper escaping.
+    """
     value = value.strip().strip('"').strip("'")
     if value.lower() == 'true':
         return True
@@ -104,9 +115,15 @@ def parse_value(value: str) -> Any:
 
 
 def write_toon_file(path: Path, data: Dict[str, Any]) -> None:
+    """
+    Write dictionary to TOON format file.
+
+    Note: Simplified writer. For full TOON spec v3.0 compliance,
+    use ToonSerializer from toon_serializer module.
+    """
     with open(path, 'w', encoding='utf-8') as f:
         for key, value in data.items():
-            if isinstance(value, (dict, list)):
+            if isinstance(value, (dict, list))):
                 f.write(f"{key}:\n")
                 write_toon_value(f, value, 1)
             else:
@@ -114,6 +131,12 @@ def write_toon_file(path: Path, data: Dict[str, Any]) -> None:
 
 
 def write_toon_value(f: TextIO, value: Any, indent: int = 0) -> None:
+    """
+    Write a value to TOON format.
+
+    Note: Simplified writer. For full TOON spec v3.0 compliance,
+    use ToonSerializer from toon_serializer module.
+    """
     prefix = '  ' * indent
 
     if isinstance(value, dict):
@@ -130,6 +153,12 @@ def write_toon_value(f: TextIO, value: Any, indent: int = 0) -> None:
 
 
 def format_value(value: Any) -> str:
+    """
+    Format a value for TOON output.
+
+    Note: Simplified formatter. For full TOON spec v3.0 compliance,
+    use ToonSerializer from toon_serializer module.
+    """
     if isinstance(value, bool):
         return 'true' if value else 'false'
     if value is None:

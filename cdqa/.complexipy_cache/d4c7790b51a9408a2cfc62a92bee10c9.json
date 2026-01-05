@@ -279,6 +279,12 @@
     {
       "complexity": 0,
       "file_name": "toon_serializer.py",
+      "function_name": "ToonSerializer::_escape_string",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "toon_serializer.py",
       "function_name": "ToonSerializer::dump",
       "path": "cdqa/tools/toon_serializer.py"
     },
@@ -301,13 +307,25 @@
       "path": "cdqa/tools/toon_serializer.py"
     },
     {
+      "complexity": 1,
+      "file_name": "toon_serializer.py",
+      "function_name": "ToonSerializer::_quote_key",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
       "complexity": 2,
       "file_name": "toon_serializer.py",
       "function_name": "ToonSerializer::_is_uniform_list",
       "path": "cdqa/tools/toon_serializer.py"
     },
     {
-      "complexity": 2,
+      "complexity": 3,
+      "file_name": "toon_serializer.py",
+      "function_name": "ToonSerializer::_format_number",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 3,
       "file_name": "toon_serializer.py",
       "function_name": "ToonSerializer::_serialize_uniform_list",
       "path": "cdqa/tools/toon_serializer.py"
@@ -325,15 +343,39 @@
       "path": "cdqa/tools/toon_serializer.py"
     },
     {
-      "complexity": 8,
+      "complexity": 7,
       "file_name": "toon_serializer.py",
-      "function_name": "ToonSerializer::_serialize_list",
+      "function_name": "ToonSerializer::_serialize_inline_list",
       "path": "cdqa/tools/toon_serializer.py"
     },
     {
       "complexity": 11,
       "file_name": "toon_serializer.py",
       "function_name": "ToonSerializer::_serialize_primitive",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 12,
+      "file_name": "toon_serializer.py",
+      "function_name": "ToonSerializer::_serialize_list",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 12,
+      "file_name": "toon_serializer.py",
+      "function_name": "ToonSerializer::_should_quote_string",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 13,
+      "file_name": "toon_serializer.py",
+      "function_name": "ToonSerializer::_serialize_cell_value",
+      "path": "cdqa/tools/toon_serializer.py"
+    },
+    {
+      "complexity": 17,
+      "file_name": "toon_serializer.py",
+      "function_name": "ToonSerializer::_serialize_inline_dict",
       "path": "cdqa/tools/toon_serializer.py"
     },
     {
