@@ -1,24 +1,8 @@
-# Pydantic-Guided TOON Formatter
+# Pydantic-Guided TOON Formatter - Quick Start
 
-Pydantic-guided TOON formatter combining [Instructor](https://github.com/instructor-ai/instructor) validation with [TOON](https://github.com/toon-format/toon) token efficiency.
+Quick start guide for combining [Instructor](https://github.com/instructor-ai/instructor) validation with [TOON](https://github.com/toon-format/toon) token efficiency.
 
-## Quick Start
-
-### Installation
-
-```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Or using poetry
-poetry install
-```
-
-### Basic Usage
+## Basic Usage
 
 ```python
 from formatter import create_formatter
@@ -48,10 +32,9 @@ employees[3]{id,name,department,salary}:
   3,Charlie,Marketing,65000
 ```
 
-### Convert Existing Data
+## Convert Existing Data
 
 ```python
-# Convert dictionary to TOON without LLM
 data_dict = {
     "header": {"version": "1.0", "format_id": "toon"},
     "arrays": {
@@ -86,20 +69,3 @@ See [README.md](README.md) for comprehensive documentation.
 
 - [Basic LLM Extraction](examples/example_1_basic.py)
 - [Dictionary Conversion](examples/example_2_dict.py)
-
-## Testing
-
-```bash
-# Run tests
-pytest tests/ -v
-
-# Run with coverage
-pytest tests/ --cov=.
-
-# Lint code
-ruff check .
-```
-
-## License
-
-MIT License - See [LICENSE](LICENSE) file.

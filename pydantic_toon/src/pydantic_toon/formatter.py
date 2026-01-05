@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic, Type, Optional, Tuple
+from typing import TypeVar, Generic, Type, Optional, Tuple, Generator
 from pydantic import BaseModel, ValidationError
 
 try:
@@ -8,8 +8,8 @@ try:
 except ImportError:
     instructor_available = False
 
-from models import ToonDocument, ToonFormatError
-from serializer import pydantic_to_toon, validate_toon_structure
+from .models import ToonDocument, ToonFormatError
+from .serializer import pydantic_to_toon
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -68,22 +68,13 @@ class ToonFormatter(Generic[T]):
             # Extract with Instructor (includes automatic retry)
             model = self._extract_from_llm(prompt, retries, **kwargs)
 
-            # Additional validation
-            validated_model = self._validate_model(model)
-
-            # Pre-serialization validation
-            model_dict = validated_model.model_dump()
-            validation_errors = validate_toon_structure(model_dict)
-            if validation_errors:
-                raise ToonFormatError(
-                    f"TOON structure validation failed:\n"
-                    + "\n".join(validation_errors)
-                )
+            # Pydantic model is already validated, no additional checks needed
+            # (Type checking and structural validation are in models.py)
 
             # Serialize to TOON
-            toon_string = pydantic_to_toon(validated_model)
+            toon_string = pydantic_to_toon(model)
 
-            return validated_model, toon_string
+            return model, toon_string
 
         except ValidationError as e:
             error_msg = self._generate_validation_error(e)
@@ -112,34 +103,6 @@ class ToonFormatter(Generic[T]):
             **kwargs,
         )
 
-    def _validate_model(self, model: T) -> T:
-        """
-        Additional validation beyond Pydantic.
-
-        Args:
-            model: Pydantic model instance
-
-        Returns:
-            Validated model
-
-        Raises:
-            ValueError: If validation fails
-        """
-        # Check for duplicate keys in arrays
-        if hasattr(model, "arrays"):
-            for array_name, array_data in model.arrays.items():
-                if hasattr(array_data, "fields"):
-                    field_names = [f.name for f in array_data.fields]
-                    if len(field_names) != len(set(field_names)):
-                        duplicates = [
-                            name for name in field_names if field_names.count(name) > 1
-                        ]
-                        raise ValueError(
-                            f"Duplicate field names in array '{array_name}': {duplicates}"
-                        )
-
-        return model
-
     def _generate_validation_error(self, error: ValidationError) -> str:
         """
         Generate human-readable error message for LLM.
@@ -164,7 +127,7 @@ class ToonFormatter(Generic[T]):
         """
         Convert dictionary to Pydantic model and then to TOON.
 
-        This bypasses the LLM and directly serializes existing data.
+        This bypasses LLM and directly serializes existing data.
 
         Args:
             data_dict: Dictionary representation of data
@@ -176,16 +139,13 @@ class ToonFormatter(Generic[T]):
             ToonFormatError: If validation or serialization fails
         """
         try:
-            # Parse dictionary to Pydantic model
+            # Parse dictionary to Pydantic model (validates automatically)
             model = self.model_class.model_validate(data_dict)
 
-            # Validate
-            validated_model = self._validate_model(model)
-
             # Serialize to TOON
-            toon_string = pydantic_to_toon(validated_model)
+            toon_string = pydantic_to_toon(model)
 
-            return validated_model, toon_string
+            return model, toon_string
 
         except ValidationError as e:
             error_msg = self._generate_validation_error(e)
@@ -196,12 +156,12 @@ class ToonFormatter(Generic[T]):
 
 def stream_to_toon(
     model_class: Type[T], client, prompt: str, max_retries: int = 3
-) -> None:
+) -> Generator[str, None, None]:
     """
     Stream partial results and update TOON output incrementally.
 
     This function uses Instructor's Partial[Model] support to show
-    progress as the LLM generates data.
+    progress as LLM generates data.
 
     Args:
         model_class: Pydantic BaseModel class
@@ -209,22 +169,24 @@ def stream_to_toon(
         prompt: Natural language prompt
         max_retries: Maximum retries
 
+    Yields:
+        TOON strings as they are generated
+
     Raises:
         ImportError: If instructor is not installed
         ToonFormatError: If streaming fails
+
+    Example:
+        >>> for toon_chunk in stream_to_toon(ToonDocument, client, "Create 3 employees"):
+        ...     print(toon_chunk)
     """
     if not instructor_available:
-        raise ImportError(
-            "Instructor is not installed. Install it with: pip install instructor"
-        )
+        raise ImportError("Instructor is not installed. Install it with: pip install instructor")
 
     try:
         from instructor import Partial
 
-        formatter = ToonFormatter(model_class, client, max_retries)
-
-        print("Streaming TOON output...")
-        print("=" * 50)
+        last_toon_string = ""
 
         for partial_model in client.chat.completions.create(
             response_model=Partial[model_class],
@@ -233,15 +195,15 @@ def stream_to_toon(
         ):
             # Convert partial model to TOON (may be incomplete)
             try:
-                toon_string = pydantic_to_toon(partial_model)
-                print(toon_string)
-                print("-" * 50)
+                current_toon_string = pydantic_to_toon(partial_model)
+
+                # Only yield if content has changed
+                if current_toon_string != last_toon_string:
+                    yield current_toon_string
+                    last_toon_string = current_toon_string
             except Exception:
                 # Skip incomplete models that can't be serialized
                 pass
-
-        print("=" * 50)
-        print("Streaming complete.")
 
     except Exception as e:
         raise ToonFormatError(f"Streaming failed: {e}")
@@ -275,9 +237,7 @@ def create_formatter(
         >>> model, toon_string = formatter.format_from_llm("Create 3 employees")
     """
     if not instructor_available:
-        raise ImportError(
-            "Instructor is not installed. Install it with: pip install instructor"
-        )
+        raise ImportError("Instructor is not installed. Install it with: pip install instructor")
 
     # Initialize Instructor client
     if api_key:

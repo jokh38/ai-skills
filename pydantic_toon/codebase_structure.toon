@@ -1,0 +1,165 @@
+timestamp: "2026-01-05T01:45:14.432076+00:00"
+workspace: /home/vscode/.claude/skills/pydantic_toon
+user_request: 
+codebase_summary:
+  total_files: 10
+  total_functions: 47
+  total_classes: 15
+  total_symbols: 0
+  primary_language: python
+structure_analysis:
+  files:
+    [10] {path, language, functions, classes, imports, docstring, entry_point, calls}
+    examples/__init__.py | python | - | - | - | "Example scripts for pydantic_toon." | null | -
+    examples/example_2_dict.py | python | main | - | {2 keys} | "Example: Converting dictionary to TOON" | {2 keys} | [3 items]
+    examples/example_1_basic.py | python | main | - | {2 keys} | "Example: Generating TOON from LLM response" | {2 keys} | [6 items]
+    tests/test_models.py | python | test_valid_header;test_header_defaults;test_valid_metadata...(+23) | TestToonHeader;TestToonMetadata;TestToonFieldDefinition...(+4) | {1 keys} | "Unit tests for pydantic_toon models." | null | [65 items]
+    tests/conftest.py | python | - | - | {1 keys} | "Pytest configuration for pydantic_toon." | null | -
+    tests/__init__.py | python | - | - | - | "Test package for pydantic_toon." | null | -
+    src/pydantic_toon/formatter.py | python | __init__;format_from_llm;_extract_from_llm...(+4) | ToonFormatter | {2 keys} | null | null | [22 items]
+    src/pydantic_toon/serializer.py | python | pydantic_to_toon;estimate_token_savings | - | {2 keys} | null | null | [6 items]
+    src/pydantic_toon/__init__.py | python | - | - | - | "Pydantic-guided TOON formatter." | null | -
+    src/pydantic_toon/models.py | python | validate_array_length_positive;validate_field_count_positive;validate_snake_case...(+7) | FieldType;ToonHeader;ToonMetadata...(+4) | {2 keys} | null | null | [34 items]
+  entry_points:
+    -
+      file: examples/example_2_dict.py
+      type: main_block
+      line: 83
+    -
+      file: examples/example_1_basic.py
+      type: main_block
+      line: 59
+  file_purposes:
+    [7] {path, purpose}
+    examples/__init__.py | "Example scripts for pydantic_toon."
+    examples/example_2_dict.py | "Example: Converting dictionary to TOON"
+    examples/example_1_basic.py | "Example: Generating TOON from LLM response"
+    tests/test_models.py | "Unit tests for pydantic_toon models."
+    tests/conftest.py | "Pytest configuration for pydantic_toon."
+    tests/__init__.py | "Test package for pydantic_toon."
+    src/pydantic_toon/__init__.py | "Pydantic-guided TOON formatter."
+  key_abstractions:
+    [15] {class, file, responsibility, key_methods}
+    TestToonHeader | tests/test_models.py | "Unit tests for pydantic_toon models." | test_valid_header,test_header_defaults
+    TestToonMetadata | tests/test_models.py | "Unit tests for pydantic_toon models." | test_valid_metadata,test_negative_array_length,test_zero_array_length,test_negative_field_count
+    TestToonFieldDefinition | tests/test_models.py | "Unit tests for pydantic_toon models." | test_valid_field,test_field_with_string_type,test_field_defaults,test_invalid_field_name,test_invalid_field_type
+    TestToonArray | tests/test_models.py | "Unit tests for pydantic_toon models." | test_valid_array,test_array_length_mismatch,test_duplicate_field_names,test_field_count_mismatch,test_field_type_mismatch
+    TestToonDocument | tests/test_models.py | "Unit tests for pydantic_toon models." | test_valid_document,test_document_with_arrays,test_invalid_array_name,test_to_toon_dict
+    TestToonFormatError | tests/test_models.py | "Unit tests for pydantic_toon models." | test_exception_creation,test_exception_raising
+    TestFieldType | tests/test_models.py | "Unit tests for pydantic_toon models." | test_field_types,test_field_type_comparison
+    ToonFormatter | src/pydantic_toon/formatter.py | "ToonFormatter implementation" | __init__,format_from_llm,format_from_dict
+    FieldType | src/pydantic_toon/models.py | "FieldType implementation" | -
+    ToonHeader | src/pydantic_toon/models.py | "ToonHeader implementation" | -
+    ToonMetadata | src/pydantic_toon/models.py | "ToonMetadata implementation" | -
+    ToonFieldDefinition | src/pydantic_toon/models.py | "ToonFieldDefinition implementation" | -
+    ToonArray | src/pydantic_toon/models.py | "ToonArray implementation" | to_toon_dict
+    ToonDocument | src/pydantic_toon/models.py | "ToonDocument implementation" | to_toon_dict
+    ToonFormatError | src/pydantic_toon/models.py | "ToonFormatError implementation" | -
+definition_index:
+
+pattern_findings:
+  existing_tests:
+    count: 0
+    frameworks:
+      [1]
+      pytest
+  error_handling:
+    language: python
+    total_error_handlers: 0
+  technical_debt:
+    total_count: 0
+    by_type:
+      TODO: 0
+      FIXME: 0
+      HACK: 0
+      XXX: 0
+      NOTE: 0
+  import_graph:
+    total_imports: 27
+    unique_modules: 14
+    external_dependencies:
+      [11]
+      enum
+      instructor
+      models
+      pathlib
+      pydantic
+      pydantic_toon
+      pydantic_toon.models
+      pytest
+      sys
+      toon_format
+      typing
+    most_imported:
+      - ('sys', 3)
+      - ('pathlib', 3)
+      - ('pydantic', 3)
+      - ('typing', 3)
+      - ('.models', 3)
+      - ('pydantic_toon', 2)
+      - ('instructor', 2)
+      - ('.serializer', 2)
+      - ('pytest', 1)
+      - ('pydantic_toon.models', 1)
+      - ('toon_format', 1)
+      - ('models', 1)
+      - ('.formatter', 1)
+      - ('enum', 1)
+    source: ast
+  call_graph:
+    [50] {caller, callee, file}
+    main | formatter.format_from_dict | examples/example_2_dict.py
+    main | create_formatter | examples/example_2_dict.py
+    main | formatter.format_from_llm | examples/example_1_basic.py
+    main | create_formatter | examples/example_1_basic.py
+    main | model.arrays.keys | examples/example_1_basic.py
+    test_valid_header | ToonHeader | tests/test_models.py
+    test_header_defaults | ToonHeader | tests/test_models.py
+    test_valid_metadata | ToonMetadata | tests/test_models.py
+    test_negative_array_length | pytest.raises | tests/test_models.py
+    test_negative_array_length | ToonMetadata | tests/test_models.py
+    test_zero_array_length | pytest.raises | tests/test_models.py
+    test_zero_array_length | ToonMetadata | tests/test_models.py
+    test_negative_field_count | pytest.raises | tests/test_models.py
+    test_negative_field_count | ToonMetadata | tests/test_models.py
+    test_valid_field | ToonFieldDefinition | tests/test_models.py
+    test_field_with_string_type | ToonFieldDefinition | tests/test_models.py
+    test_field_defaults | ToonFieldDefinition | tests/test_models.py
+    test_invalid_field_name | pytest.raises | tests/test_models.py
+    test_invalid_field_name | ToonFieldDefinition | tests/test_models.py
+    test_invalid_field_type | pytest.raises | tests/test_models.py
+    test_invalid_field_type | ToonFieldDefinition | tests/test_models.py
+    test_valid_array | ToonArray | tests/test_models.py
+    test_valid_array | ToonMetadata | tests/test_models.py
+    test_valid_array | ToonFieldDefinition | tests/test_models.py
+    test_array_length_mismatch | ToonArray | tests/test_models.py
+    test_array_length_mismatch | pytest.raises | tests/test_models.py
+    test_array_length_mismatch | ToonMetadata | tests/test_models.py
+    test_array_length_mismatch | ToonFieldDefinition | tests/test_models.py
+    test_duplicate_field_names | ToonArray | tests/test_models.py
+    test_duplicate_field_names | pytest.raises | tests/test_models.py
+    test_duplicate_field_names | ToonMetadata | tests/test_models.py
+    test_duplicate_field_names | ToonFieldDefinition | tests/test_models.py
+    test_field_count_mismatch | ToonArray | tests/test_models.py
+    test_field_count_mismatch | pytest.raises | tests/test_models.py
+    test_field_count_mismatch | ToonMetadata | tests/test_models.py
+    test_field_count_mismatch | ToonFieldDefinition | tests/test_models.py
+    test_field_type_mismatch | ToonArray | tests/test_models.py
+    test_field_type_mismatch | pytest.raises | tests/test_models.py
+    test_field_type_mismatch | ToonMetadata | tests/test_models.py
+    test_field_type_mismatch | ToonFieldDefinition | tests/test_models.py
+    test_valid_float_field | ToonArray | tests/test_models.py
+    test_valid_float_field | ToonMetadata | tests/test_models.py
+    test_valid_float_field | ToonFieldDefinition | tests/test_models.py
+    test_to_toon_dict | ToonDocument | tests/test_models.py
+    test_to_toon_dict | ToonHeader | tests/test_models.py
+    test_to_toon_dict | ToonArray | tests/test_models.py
+    test_to_toon_dict | doc.to_toon_dict | tests/test_models.py
+    test_to_toon_dict | ToonFieldDefinition | tests/test_models.py
+    test_to_toon_dict | array.to_toon_dict | tests/test_models.py
+    test_to_toon_dict | ToonMetadata | tests/test_models.py
+code_quality:
+  test_coverage_estimate: "Very Low (estimated <20%)"
+recommendations:
+  [1]
+  Increase test coverage: only 0 test files for 10 source files

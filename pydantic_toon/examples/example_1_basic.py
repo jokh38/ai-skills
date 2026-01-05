@@ -1,12 +1,18 @@
 """
 Example: Generating TOON from LLM response
 
-This example demonstrates how to use the ToonFormatter to extract
+This example demonstrates how to use ToonFormatter to extract
 structured data from an LLM and convert it to TOON format.
 """
 
-from formatter import create_formatter
-from models import ToonDocument
+import sys
+from pathlib import Path
+
+# Add src directory to Python path
+src_path = Path(__file__).parent.parent / "src"
+sys.path.insert(0, str(src_path))
+
+from pydantic_toon import create_formatter, ToonDocument
 
 
 def main():

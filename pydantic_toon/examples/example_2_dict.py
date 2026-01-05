@@ -1,17 +1,25 @@
 """
 Example: Converting dictionary to TOON
 
-This example shows how to bypass the LLM and directly convert
+This example shows how to bypass LLM and directly convert
 existing structured data to TOON format.
 """
 
-from formatter import create_formatter
-from models import (
+import sys
+from pathlib import Path
+
+# Add src directory to Python path
+src_path = Path(__file__).parent.parent / "src"
+sys.path.insert(0, str(src_path))
+
+from pydantic_toon import (
+    create_formatter,
     ToonDocument,
     ToonArray,
     ToonMetadata,
     ToonFieldDefinition,
     ToonHeader,
+    FieldType,
 )
 
 
@@ -32,10 +40,10 @@ def main():
             "employees": {
                 "metadata": {"array_length": 3, "field_count": 4},
                 "fields": [
-                    {"name": "id", "type": "int", "required": True},
-                    {"name": "name", "type": "string", "required": True},
-                    {"name": "department", "type": "string", "required": True},
-                    {"name": "salary", "type": "int", "required": True},
+                    {"name": "id", "type": FieldType.INT, "required": True},
+                    {"name": "name", "type": FieldType.STRING, "required": True},
+                    {"name": "department", "type": FieldType.STRING, "required": True},
+                    {"name": "salary", "type": FieldType.INT, "required": True},
                 ],
                 "data": [
                     {

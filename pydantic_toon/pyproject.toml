@@ -17,6 +17,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Text Processing :: Markup",
 ]
+packages = [{include = "pydantic_toon", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
