@@ -8,7 +8,7 @@ to eliminate code duplication.
 import subprocess
 import logging
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Union
 
 
 def check_tool_availability(command: List[str], tool_name: str) -> bool:
@@ -208,6 +208,111 @@ def parse_tool_output(
                 )
 
     return matches[:200]
+
+
+def run_command(
+    cmd: List[str], timeout: int = 60, cwd: Optional[str] = None, capture: bool = True
+) -> Optional[Any]:
+    """
+    Unified subprocess runner with error handling.
+
+    Args:
+        cmd: Command list to execute
+        timeout: Timeout in seconds (default: 60)
+        cwd: Working directory (default: None)
+        capture: Whether to capture stdout/stderr (default: True)
+
+    Returns:
+        subprocess.CompletedProcess if successful, None on failure
+    """
+    try:
+        result = subprocess.run(
+            cmd, capture_output=capture, text=capture, timeout=timeout, cwd=cwd
+        )
+        return result
+    except subprocess.TimeoutExpired:
+        logging.error(f"Command timed out after {timeout}s: {' '.join(cmd)}")
+        return None
+    except FileNotFoundError:
+        logging.warning(f"Command not found: {cmd[0]}")
+        return None
+    except Exception as e:
+        logging.error(f"Command failed: {e}")
+        return None
+
+
+class NodeTraversalHelper:
+    """Helper class for tree-sitter node traversal operations."""
+
+    @staticmethod
+    def find_child_by_type(node: Any, child_type: str) -> Optional[Any]:
+        """
+        Find first child of given type.
+
+        Args:
+            node: Tree-sitter node
+            child_type: Type to search for
+
+        Returns:
+            Child node if found, None otherwise
+        """
+        for child in node.children:
+            if child.type == child_type:
+                return child
+        return None
+
+    @staticmethod
+    def find_all_children_by_type(node: Any, child_type: str) -> List[Any]:
+        """
+        Find all children of given type.
+
+        Args:
+            node: Tree-sitter node
+            child_type: Type to search for
+
+        Returns:
+            List of matching child nodes
+        """
+        return [child for child in node.children if child.type == child_type]
+
+    @staticmethod
+    def extract_text(node: Any, source: bytes, fallback: str = "unknown") -> str:
+        """
+        Extract text from node using source bytes.
+
+        Args:
+            node: Tree-sitter node
+            source: Source code bytes
+            fallback: Default text if extraction fails
+
+        Returns:
+            Extracted text as string
+        """
+        try:
+            return source[node.start_byte : node.end_byte].decode("utf-8")
+        except (AttributeError, UnicodeDecodeError):
+            return fallback
+
+    @staticmethod
+    def extract_name(
+        node: Any, source: bytes, name_types: List[str], fallback: str = "unknown"
+    ) -> str:
+        """
+        Extract name from node using one of several possible type names.
+
+        Args:
+            node: Tree-sitter node
+            source: Source code bytes
+            name_types: List of possible node types that contain name
+            fallback: Default text if extraction fails
+
+        Returns:
+            Extracted name as string
+        """
+        for child in node.children:
+            if child.type in name_types:
+                return NodeTraversalHelper.extract_text(child, source, fallback)
+        return fallback
 
 
 def print_analysis_summary(results: Dict[str, Any]):

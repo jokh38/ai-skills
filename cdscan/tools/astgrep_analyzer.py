@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Dict, List, Any
 import logging
 
-from utils import check_tool_availability
+from utils import check_tool_availability, run_command
 
 
 class AstGrepAnalyzer:
@@ -29,10 +29,7 @@ class AstGrepAnalyzer:
 
     def _check_astgrep(self) -> bool:
         """Check if ast-grep is installed."""
-        return check_tool_availability(['ast-grep', '--version'], 'ast-grep')
-        except (subprocess.TimeoutExpired, FileNotFoundError) as e:
-            self.logger.warning(f"ast-grep not found: {e}")
-            return False
+        return check_tool_availability(["ast-grep", "--version"], "ast-grep")
 
     def search_pattern(
         self, pattern: str, language: str = "python"
@@ -62,15 +59,12 @@ class AstGrepAnalyzer:
                 str(self.workspace),
             ]
 
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+            result = run_command(cmd, timeout=60)
 
-            if result.stdout:
+            if result and result.stdout:
                 return json.loads(result.stdout)
             return []
 
-        except subprocess.TimeoutExpired:
-            self.logger.error("ast-grep search timed out")
-            return []
         except json.JSONDecodeError as e:
             self.logger.error(f"Failed to parse ast-grep output: {e}")
             return []
@@ -101,9 +95,9 @@ class AstGrepAnalyzer:
                 str(self.workspace),
             ]
 
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+            result = run_command(cmd, timeout=120)
 
-            if result.stdout:
+            if result and result.stdout:
                 data = json.loads(result.stdout)
                 return self._process_lint_results(data)
             return {"total": 0, "findings": []}

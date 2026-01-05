@@ -8,13 +8,18 @@ Searches for:
 - Custom patterns
 """
 
-import subprocess
 import logging
 import json
+import subprocess
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 
-from utils import check_tool_availability, get_excluded_glob_patterns, parse_tool_output
+from utils import (
+    check_tool_availability,
+    get_excluded_glob_patterns,
+    parse_tool_output,
+    run_command,
+)
 
 
 class RipgrepSearcher:
@@ -109,7 +114,10 @@ class RipgrepSearcher:
             cmd.extend(["-t", file_type])
 
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+            result = run_command(cmd, timeout=30)
+
+            if not result:
+                return []
 
             matches = []
             for line in result.stdout.splitlines():
@@ -135,9 +143,6 @@ class RipgrepSearcher:
             logging.info(f"Found {len(matches)} matches for pattern: {pattern}")
             return matches
 
-        except subprocess.TimeoutExpired:
-            logging.error(f"Search timed out for pattern: {pattern}")
-            return []
         except Exception as e:
             logging.error(f"Search failed: {e}")
             return []
@@ -155,9 +160,9 @@ class RipgrepSearcher:
             cmd = ["rg", "--files", "--glob", pattern, str(self.workspace)]
 
             try:
-                result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+                result = run_command(cmd, timeout=10)
 
-                if result.returncode == 0:
+                if result and result.returncode == 0:
                     for file_path in result.stdout.splitlines():
                         if file_path and Path(file_path).exists():
                             test_files.append(

@@ -8,13 +8,12 @@ Generates symbol index for:
 - Symbol locations
 """
 
-import subprocess
 import logging
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 import json
 
-from utils import check_tool_availability, should_exclude_file
+from utils import check_tool_availability, should_exclude_file, run_command
 
 
 class CtagsIndexer:
@@ -43,22 +42,38 @@ class CtagsIndexer:
             return False, None
 
         # Determine ctags version
-        try:
-            result = subprocess.run(
-                ["ctags", "--version"], capture_output=True, text=True, timeout=5
-            )
-            if result.returncode == 0:
-                version_line = result.stdout.splitlines()[0]
-                if "Universal Ctags" in version_line:
-                    return True, "universal"
-                elif "Exuberant Ctags" in version_line:
-                    return True, "exuberant"
-                else:
-                    return True, "unknown"
-        except Exception:
-            pass
+        result = run_command(["ctags", "--version"], timeout=5)
+        if result and result.returncode == 0:
+            version_line = result.stdout.splitlines()[0]
+            if "Universal Ctags" in version_line:
+                return True, "universal"
+            elif "Exuberant Ctags" in version_line:
+                return True, "exuberant"
+            else:
+                return True, "unknown"
 
         return True, None
+
+    def _find_files_by_pattern(self, pattern: str) -> List[str]:
+        """
+        Find files matching pattern in workspace.
+
+        Args:
+            pattern: Glob pattern for files
+
+        Returns:
+            List of file paths
+        """
+        files = []
+        if pattern.startswith("**"):
+            suffix = pattern[3:] if len(pattern) > 3 else "*"
+            files = [str(f) for f in self.workspace.rglob(suffix) if f.is_file()]
+        elif "*" in pattern:
+            files = [str(f) for f in self.workspace.glob(pattern) if f.is_file()]
+        else:
+            files = [str(f) for f in self.workspace.glob(pattern) if f.is_file()]
+
+        return [f for f in files if not should_exclude_file(Path(f))]
 
     def generate_tags(self, pattern: str = "**/*") -> bool:
         """
@@ -76,17 +91,8 @@ class CtagsIndexer:
             )
             return False
 
-        # Find all files matching pattern (use relative patterns)
-        files = []
-        if pattern.startswith("**"):
-            files = [str(f) for f in self.workspace.rglob(pattern[3:]) if f.is_file()]
-        elif "*" in pattern:
-            files = [str(f) for f in self.workspace.glob(pattern) if f.is_file()]
-        else:
-            files = [str(f) for f in self.workspace.glob(pattern) if f.is_file()]
-
-        # Filter out excluded files
-        files = [f for f in files if not should_exclude_file(Path(f))]
+        # Find files matching pattern
+        files = self._find_files_by_pattern(pattern)
 
         if not files:
             logging.warning(f"No files found matching {pattern} after filtering")
@@ -113,12 +119,12 @@ class CtagsIndexer:
                 str(files_list_file),  # Read file list from file
             ]
 
-            result = subprocess.run(
-                cmd, cwd=str(self.workspace), capture_output=True, text=True, timeout=60
-            )
+            result = run_command(cmd, cwd=str(self.workspace), timeout=60)
 
-            if result.returncode != 0:
-                logging.error(f"ctags failed: {result.stderr}")
+            if not result or result.returncode != 0:
+                logging.error(
+                    f"ctags failed: {result.stderr if result else 'Unknown error'}"
+                )
                 # Try simpler command without JSON format
                 return self._generate_tags_simple(pattern)
 
@@ -128,9 +134,6 @@ class CtagsIndexer:
 
             return True
 
-        except subprocess.TimeoutExpired:
-            logging.error("ctags timed out after 60 seconds")
-            return False
         except Exception as e:
             logging.error(f"Failed to generate tags: {e}")
             return False
@@ -145,17 +148,8 @@ class CtagsIndexer:
     def _generate_tags_simple(self, pattern: str = "**/*") -> bool:
         """Generate tags using basic ctags command (fallback)."""
         try:
-            # Find all files matching pattern (use relative patterns)
-            files = []
-            if pattern.startswith("**"):
-                suffix = pattern[3:] if len(pattern) > 3 else "*"
-                files = [str(f) for f in self.workspace.rglob(suffix) if f.is_file()]
-            elif "*" in pattern:
-                files = [str(f) for f in self.workspace.glob(pattern) if f.is_file()]
-            else:
-                files = [str(f) for f in self.workspace.glob(pattern) if f.is_file()]
-
-            files = [f for f in files if not should_exclude_file(Path(f))]
+            # Find files matching pattern
+            files = self._find_files_by_pattern(pattern)
 
             if not files:
                 return False
@@ -175,16 +169,16 @@ class CtagsIndexer:
                 str(files_list_file),
             ]
 
-            result = subprocess.run(
-                cmd, cwd=str(self.workspace), capture_output=True, text=True, timeout=60
-            )
+            result = run_command(cmd, cwd=str(self.workspace), timeout=60)
 
-            if result.returncode == 0:
+            if result and result.returncode == 0:
                 self._parse_tags_file(str(self.tags_file))
                 logging.info(f"Generated {len(self.tags_data)} tags (simple format)")
                 return True
             else:
-                logging.error(f"Simple ctags also failed: {result.stderr}")
+                logging.error(
+                    f"Simple ctags also failed: {result.stderr if result else 'Unknown error'}"
+                )
                 return False
 
         except Exception as e:

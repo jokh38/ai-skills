@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 import logging
 
-from utils import check_tool_availability, parse_tool_output
+from utils import check_tool_availability, parse_tool_output, run_command
 
 
 class UgrepSearcher:
@@ -58,15 +58,12 @@ class UgrepSearcher:
                 str(self.workspace),
             ]
 
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+            result = run_command(cmd, timeout=120)
 
-            if result.stdout:
+            if result and result.stdout:
                 return parse_tool_output(result.stdout, pattern, search_type="code")
             return []
 
-        except subprocess.TimeoutExpired:
-            self.logger.error("ugrep archive search timed out")
-            return []
         except Exception as e:
             self.logger.error(f"ugrep archive search failed: {e}")
             return []
@@ -100,15 +97,12 @@ class UgrepSearcher:
                 str(self.workspace),
             ]
 
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+            result = run_command(cmd, timeout=120)
 
-            if result.stdout:
+            if result and result.stdout:
                 return parse_tool_output(result.stdout, pattern, search_type="fuzzy")
             return []
 
-        except subprocess.TimeoutExpired:
-            self.logger.error("ugrep fuzzy search timed out")
-            return []
         except Exception as e:
             self.logger.error(f"ugrep fuzzy search failed: {e}")
             return []
@@ -140,17 +134,14 @@ class UgrepSearcher:
                 str(self.workspace),
             ]
 
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+            result = run_command(cmd, timeout=120)
 
-            if result.stdout:
+            if result and result.stdout:
                 return parse_tool_output(result.stdout, pattern, search_type="pdf")
             else:
                 self.logger.info("PDF search returned no results (requires pdftotext)")
                 return []
 
-        except subprocess.TimeoutExpired:
-            self.logger.error("ugrep PDF search timed out")
-            return []
         except Exception as e:
             self.logger.error(f"ugrep PDF search failed: {e}")
             return []
@@ -181,15 +172,12 @@ class UgrepSearcher:
                 str(self.workspace),
             ]
 
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+            result = run_command(cmd, timeout=120)
 
-            if result.stdout:
+            if result and result.stdout:
                 return parse_tool_output(result.stdout, pattern, search_type="boolean")
             return []
 
-        except subprocess.TimeoutExpired:
-            self.logger.error("ugrep boolean search timed out")
-            return []
         except Exception as e:
             self.logger.error(f"ugrep boolean search failed: {e}")
             return []
@@ -226,15 +214,12 @@ class UgrepSearcher:
 
             cmd.extend([pattern, str(self.workspace)])
 
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+            result = run_command(cmd, timeout=60)
 
-            if result.stdout:
+            if result and result.stdout:
                 return parse_tool_output(result.stdout, pattern, search_type="code")
             return []
 
-        except subprocess.TimeoutExpired:
-            self.logger.error("ugrep code search timed out")
-            return []
         except Exception as e:
             self.logger.error(f"ugrep code search failed: {e}")
             return []

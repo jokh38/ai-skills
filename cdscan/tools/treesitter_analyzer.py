@@ -13,7 +13,7 @@ from typing import Dict, List, Optional, Any
 import json
 import logging
 
-from utils import should_exclude_file, extract_module_name
+from utils import should_exclude_file, extract_module_name, NodeTraversalHelper
 
 try:
     from tree_sitter import Language, Parser, Node
@@ -195,12 +195,12 @@ class TreeSitterAnalyzer:
 
         # Extract functions, classes, imports based on language
         if language == "python":
-            self._extract_python_structure(root_node, file_result, source_code)
+            self._extract_structure(root_node, file_result, source_code, "python")
             self._extract_python_docstring(root_node, file_result, source_code)
             self._extract_python_entry_point(root_node, file_result, source_code)
             self._extract_python_calls(root_node, file_result, source_code)
         elif language == "cpp":
-            self._extract_cpp_structure(root_node, file_result, source_code)
+            self._extract_structure(root_node, file_result, source_code, "cpp")
 
         self.results["files"].append(file_result)
         self.results["total_functions"] += len(file_result["functions"])
@@ -225,20 +225,49 @@ class TreeSitterAnalyzer:
                 }
             )
 
-    def _extract_python_structure(self, node: "Node", file_result: Dict, source: bytes):
+    def _extract_structure(
+        self, node: "Node", file_result: Dict, source: bytes, language: str
+    ):
         """
-        Extract Python-specific structure from AST.
+        Extract structure from AST using language-specific configuration.
 
         Args:
             node: Tree-sitter node
             file_result: Dictionary to store results
             source: Source code bytes
+            language: Programming language
         """
+        # Language-specific extraction configuration
+        lang_configs = {
+            "python": {
+                "function_types": ["function_definition"],
+                "class_types": ["class_definition"],
+                "import_types": ["import_statement", "import_from_statement"],
+                "get_function_name": self._get_function_name,
+                "get_function_params": self._get_function_params,
+                "get_class_name": self._get_class_name,
+                "get_class_methods": self._get_class_methods,
+                "get_import_info": self._get_import_info,
+            },
+            "cpp": {
+                "function_types": ["function_definition"],
+                "class_types": ["class_specifier", "struct_specifier"],
+                "import_types": ["preproc_include"],
+                "get_function_name": self._get_cpp_function_name,
+                "get_function_params": self._get_cpp_function_params,
+                "get_class_name": self._get_cpp_class_name,
+                "get_class_methods": self._get_cpp_class_methods,
+                "get_import_info": self._get_cpp_include_info,
+            },
+        }
+
+        config = lang_configs.get(language, lang_configs["python"])
 
         def traverse(n: "Node", depth: int = 0):
-            if n.type == "function_definition":
-                func_name = self._get_function_name(n, source)
-                params = self._get_function_params(n, source)
+            # Extract functions
+            if n.type in config["function_types"]:
+                func_name = config["get_function_name"](n, source)
+                params = config["get_function_params"](n, source)
                 file_result["functions"].append(
                     {
                         "name": func_name,
@@ -249,9 +278,10 @@ class TreeSitterAnalyzer:
                     }
                 )
 
-            elif n.type == "class_definition":
-                class_name = self._get_class_name(n, source)
-                methods = self._get_class_methods(n, source)
+            # Extract classes
+            elif n.type in config["class_types"]:
+                class_name = config["get_class_name"](n, source)
+                methods = config["get_class_methods"](n, source)
                 file_result["classes"].append(
                     {
                         "name": class_name,
@@ -260,54 +290,9 @@ class TreeSitterAnalyzer:
                     }
                 )
 
-            elif n.type == "import_statement" or n.type == "import_from_statement":
-                import_info = self._get_import_info(n, source)
-                if import_info:
-                    file_result["imports"].append(import_info)
-
-            # Recurse to children
-            for child in n.children:
-                traverse(child, depth + 1)
-
-        traverse(node)
-
-    def _extract_cpp_structure(self, node: "Node", file_result: Dict, source: bytes):
-        """
-        Extract C++-specific structure from AST.
-
-        Args:
-            node: Tree-sitter node
-            file_result: Dictionary to store results
-            source: Source code bytes
-        """
-
-        def traverse(n: "Node", depth: int = 0):
-            if n.type == "function_definition":
-                func_name = self._get_cpp_function_name(n, source)
-                params = self._get_cpp_function_params(n, source)
-                file_result["functions"].append(
-                    {
-                        "name": func_name,
-                        "line": n.start_point[0] + 1,
-                        "params": params,
-                        "complexity": self._estimate_complexity(n),
-                        "nesting_depth": depth,
-                    }
-                )
-
-            elif n.type == "class_specifier" or n.type == "struct_specifier":
-                class_name = self._get_cpp_class_name(n, source)
-                methods = self._get_cpp_class_methods(n, source)
-                file_result["classes"].append(
-                    {
-                        "name": class_name,
-                        "line": n.start_point[0] + 1,
-                        "methods": methods,
-                    }
-                )
-
-            elif n.type == "preproc_include":
-                import_info = self._get_cpp_include_info(n, source)
+            # Extract imports
+            elif n.type in config["import_types"]:
+                import_info = config["get_import_info"](n, source)
                 if import_info:
                     file_result["imports"].append(import_info)
 
@@ -319,43 +304,35 @@ class TreeSitterAnalyzer:
 
     def _get_function_name(self, node: "Node", source: bytes) -> str:
         """Extract function name from node."""
-        for child in node.children:
-            if child.type == "identifier":
-                return source[child.start_byte : child.end_byte].decode("utf-8")
-        return "unknown"
+        return NodeTraversalHelper.extract_name(node, source, ["identifier"])
 
     def _get_function_params(self, node: "Node", source: bytes) -> List[str]:
         """Extract function parameters."""
         params = []
-        for child in node.children:
-            if child.type == "parameters":
-                for param in child.children:
-                    if param.type == "identifier":
-                        params.append(
-                            source[param.start_byte : param.end_byte].decode("utf-8")
-                        )
+        param_list = NodeTraversalHelper.find_child_by_type(node, "parameters")
+        if param_list:
+            for param in param_list.children:
+                if param.type == "identifier":
+                    params.append(NodeTraversalHelper.extract_text(param, source))
         return params
 
     def _get_class_name(self, node: "Node", source: bytes) -> str:
         """Extract class name from node."""
-        for child in node.children:
-            if child.type == "identifier":
-                return source[child.start_byte : child.end_byte].decode("utf-8")
-        return "unknown"
+        return NodeTraversalHelper.extract_name(node, source, ["identifier"])
 
     def _get_class_methods(self, node: "Node", source: bytes) -> List[str]:
         """Extract method names from class."""
         methods = []
-        for child in node.children:
-            if child.type == "block":
-                for stmt in child.children:
-                    if stmt.type == "function_definition":
-                        methods.append(self._get_function_name(stmt, source))
+        block = NodeTraversalHelper.find_child_by_type(node, "block")
+        if block:
+            for stmt in block.children:
+                if stmt.type == "function_definition":
+                    methods.append(self._get_function_name(stmt, source))
         return methods
 
     def _get_import_info(self, node: "Node", source: bytes) -> Optional[Dict]:
         """Extract import information."""
-        import_text = source[node.start_byte : node.end_byte].decode("utf-8")
+        import_text = NodeTraversalHelper.extract_text(node, source)
         return {
             "statement": import_text,
             "line": node.start_point[0] + 1,
@@ -500,65 +477,64 @@ class TreeSitterAnalyzer:
 
     def _get_cpp_function_name(self, node: "Node", source: bytes) -> str:
         """Extract C++ function name from node."""
-        for child in node.children:
-            if child.type == "function_declarator":
-                for subchild in child.children:
-                    if subchild.type == "identifier":
-                        return source[subchild.start_byte : subchild.end_byte].decode(
-                            "utf-8"
-                        )
-                    elif subchild.type == "field_identifier":
-                        return source[subchild.start_byte : subchild.end_byte].decode(
-                            "utf-8"
-                        )
-                    elif subchild.type == "qualified_identifier":
-                        # Get the last identifier for qualified names
-                        for qchild in subchild.children:
-                            if qchild.type == "identifier":
-                                return source[
-                                    qchild.start_byte : qchild.end_byte
-                                ].decode("utf-8")
+        declarator = NodeTraversalHelper.find_child_by_type(node, "function_declarator")
+        if declarator:
+            name = NodeTraversalHelper.extract_name(
+                declarator, source, ["identifier", "field_identifier"]
+            )
+            if name != "unknown":
+                return name
+
+            # Handle qualified identifiers
+            qual_id = NodeTraversalHelper.find_child_by_type(
+                declarator, "qualified_identifier"
+            )
+            if qual_id:
+                for qchild in qual_id.children:
+                    if qchild.type == "identifier":
+                        return NodeTraversalHelper.extract_text(qchild, source)
+
         return "unknown"
 
     def _get_cpp_function_params(self, node: "Node", source: bytes) -> List[str]:
         """Extract C++ function parameters."""
         params = []
-        for child in node.children:
-            if child.type == "function_declarator":
-                for subchild in child.children:
-                    if subchild.type == "parameter_list":
-                        for param in subchild.children:
-                            if param.type == "parameter_declaration":
-                                # Try to extract parameter name (identifier)
-                                for pchild in param.children:
-                                    if pchild.type == "identifier":
-                                        params.append(
-                                            source[
-                                                pchild.start_byte : pchild.end_byte
-                                            ].decode("utf-8")
-                                        )
+        declarator = NodeTraversalHelper.find_child_by_type(node, "function_declarator")
+        if declarator:
+            param_list = NodeTraversalHelper.find_child_by_type(
+                declarator, "parameter_list"
+            )
+            if param_list:
+                for param in param_list.children:
+                    if param.type == "parameter_declaration":
+                        param_name = NodeTraversalHelper.find_child_by_type(
+                            param, "identifier"
+                        )
+                        if param_name:
+                            params.append(
+                                NodeTraversalHelper.extract_text(param_name, source)
+                            )
         return params
 
     def _get_cpp_class_name(self, node: "Node", source: bytes) -> str:
         """Extract C++ class/struct name from node."""
-        for child in node.children:
-            if child.type == "type_identifier":
-                return source[child.start_byte : child.end_byte].decode("utf-8")
-        return "unknown"
+        return NodeTraversalHelper.extract_name(node, source, ["type_identifier"])
 
     def _get_cpp_class_methods(self, node: "Node", source: bytes) -> List[str]:
         """Extract method names from C++ class."""
         methods = []
-        for child in node.children:
-            if child.type == "field_declaration_list":
-                for stmt in child.children:
-                    if stmt.type == "function_definition":
-                        methods.append(self._get_cpp_function_name(stmt, source))
+        field_list = NodeTraversalHelper.find_child_by_type(
+            node, "field_declaration_list"
+        )
+        if field_list:
+            for stmt in field_list.children:
+                if stmt.type == "function_definition":
+                    methods.append(self._get_cpp_function_name(stmt, source))
         return methods
 
     def _get_cpp_include_info(self, node: "Node", source: bytes) -> Optional[Dict]:
         """Extract C++ include information."""
-        include_text = source[node.start_byte : node.end_byte].decode("utf-8")
+        include_text = NodeTraversalHelper.extract_text(node, source)
         return {
             "statement": include_text,
             "line": node.start_point[0] + 1,
