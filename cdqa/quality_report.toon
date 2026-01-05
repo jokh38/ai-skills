@@ -1,9 +1,9 @@
-timestamp: "2026-01-05T06:15:03.446673+00:00"
+timestamp: "2026-01-05T07:46:45.386374+00:00"
 workspace: /home/vscode/.claude/skills/cdqa
 summary:
-  files_analyzed: 11
-  total_issues: 2
-  quality_score: 75
+  files_analyzed: 13
+  total_issues: 7
+  quality_score: 74
   tools_used[6]:
   ruff
   ty
@@ -13,121 +13,50 @@ summary:
   pattern_analyzer
   execution_time_ms: 0
 quality_gates[5] {gate, threshold, actual, status}:
-  linting_errors, <50, 0, PASS
+  linting_errors, <50, 5, PASS
   type_coverage, >80%, 100.0%, PASS
   security_critical, "0", 0, PASS
   cognitive_complexity, <12, 26, FAIL
   dead_code, <5, 0, PASS
-critical_issues[8] {severity, tool, file, line, issue, snippet, context_before, context_after}:
+critical_issues[11] {severity, tool, file, line, issue, snippet, context_before, context_after}:
   ERROR, complexipy, cdqa/tools/pattern_analyzer.py, 0, "Cognitive complexity 26 (F-grade) in PatternAnalyzer::_analyze_docstrings", "", -, -
-  ERROR, complexipy, cdqa/tools/skylos_analyzer.py, 0, "Cognitive complexity 25 (F-grade) in SkylosAnalyzer::scan", "", -, -
   ERROR, complexipy, cdqa/tools/pattern_analyzer.py, 0, "Cognitive complexity 24 (F-grade) in PatternAnalyzer::_analyze_error_handling", "", -, -
-  WARNING, complexipy, cdqa/run_QA.py, 0, "Cognitive complexity 19 (D-grade) in CodeQualityChecker::_build_critical_issues", "", -, -
+  ERROR, complexipy, cdqa/run_QA.py, 0, "Cognitive complexity 21 (F-grade) in CodeQualityChecker::_build_critical_issues", "", -, -
+  ERROR, ruff, tools/base_checker.py, 11, "F401: `typing.Dict` imported but unused", "from typing import Dict, Any, Optional", from pathlib import Path, import logging
+  ERROR, ruff, tools/base_checker.py, 11, "F401: `typing.Optional` imported but unused", "from typing import Dict, Any, Optional", from pathlib import Path, import logging
+  ERROR, ruff, tools/base_checker.py, 85, "F841: Local variable `e` is assigned to but never used", "        except subprocess.TimeoutExpired as e:", "            return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)", "            self.logger.error(f\"{self.tool_name} timed out\")"
+  ERROR, ruff, tools/complexipy_metrics.py, 97, "F841: Local variable `e` is assigned to but never used", "        except subprocess.TimeoutExpired as e:", "                )", "            self.logger.error(f\"{self.tool_name} timed out\")"
+  ERROR, ruff, tools/ty_checker.py, 8, "F401: `pathlib.Path` imported but unused", from pathlib import Path, "", from typing import Dict, Any
   WARNING, complexipy, cdqa/run_QA.py, 0, "Cognitive complexity 18 (D-grade) in CodeQualityChecker::_generate_immediate_fixes", "", -, -
   WARNING, complexipy, cdqa/tools/pattern_analyzer.py, 0, "Cognitive complexity 18 (D-grade) in PatternAnalyzer::_analyze_naming", "", -, -
-  WARNING, complexipy, cdqa/tools/ty_checker.py, 0, "Cognitive complexity 18 (D-grade) in TyChecker::analyze", "", -, -
   WARNING, complexipy, cdqa/tools/toon_serializer.py, 0, "Cognitive complexity 17 (D-grade) in ToonSerializer::_serialize_inline_dict", "", -, -
 ruff:
-  total: 0
-  auto_fixable: 0
-  []
+  total: 5
+  auto_fixable: 5
   severity_counts:
-    error: 0
+    error: 5
     warning: 0
     info: 0
   []
 ty:
   total: 0
   type_coverage: 100.0%
-  []
-  files_checked: 11
+  files_checked: 13
   files_with_errors: 0
   []
 semgrep:
   total: 0
-  []
   severity_counts:
     ERROR: 0
     WARNING: 0
     INFO: 0
   []
 complexipy:
-  avg_complexity: 5.8
-  total_functions: 68
-  complexity_hotspots[68] {file, function, complexity, grade}:
-    cdqa/tools/pattern_analyzer.py, "PatternAnalyzer::_analyze_docstrings", 26, F
-    cdqa/tools/skylos_analyzer.py, "SkylosAnalyzer::scan", 25, F
-    cdqa/tools/pattern_analyzer.py, "PatternAnalyzer::_analyze_error_handling", 24, F
-    cdqa/run_QA.py, "CodeQualityChecker::_build_critical_issues", 19, D
-    cdqa/run_QA.py, "CodeQualityChecker::_generate_immediate_fixes", 18, D
-    cdqa/tools/pattern_analyzer.py, "PatternAnalyzer::_analyze_naming", 18, D
-    cdqa/tools/ty_checker.py, "TyChecker::analyze", 18, D
-    cdqa/tools/toon_serializer.py, "ToonSerializer::_serialize_inline_dict", 17, D
-    cdqa/tools/pattern_analyzer.py, "PatternAnalyzer::_build_consistency_issues", 15, C
-    cdqa/tools/toon_serializer.py, "ToonSerializer::_serialize_cell_value", 13, C
-    cdqa/tools/toon_serializer.py, "ToonSerializer::_serialize_list", 12, C
-    cdqa/tools/toon_serializer.py, "ToonSerializer::_should_quote_string", 12, C
-    cdqa/tools/complexipy_metrics.py, "ComplexipyMetrics::measure", 11, C
-    cdqa/tools/ruff_checker.py, "RuffChecker::_process_results", 11, C
-    cdqa/tools/semgrep_scanner.py, "SemgrepScanner::_process_results", 11, C
-    cdqa/tools/toon_serializer.py, "ToonSerializer::_serialize_primitive", 11, C
-    cdqa/run_QA.py, "CodeQualityChecker::_cluster_issues", 10, B
-    cdqa/tools/ty_checker.py, "TyChecker::_process_results", 10, B
-    cdqa/tools/pattern_analyzer.py, "PatternAnalyzer::_analyze_imports", 8, B
-    cdqa/tools/ruff_checker.py, "RuffChecker::check", 8, B
-    cdqa/tools/semgrep_scanner.py, "SemgrepScanner::scan", 8, B
-    cdqa/cdqa_cli.py, main, 7, B
-    cdqa/run_QA.py, main, 7, B
-    cdqa/tools/toon_serializer.py, "ToonSerializer::_serialize_dict", 7, B
-    cdqa/tools/toon_serializer.py, "ToonSerializer::_serialize_inline_list", 7, B
-    cdqa/run_QA.py, "CodeQualityChecker::_extract_snippet", 6, B
-    cdqa/run_QA.py, "CodeQualityChecker::_generate_next_steps", 6, B
-    cdqa/tools/skylos_analyzer.py, "SkylosAnalyzer::_process_results", 6, B
-    cdqa/run_QA.py, "CodeQualityChecker::_synthesize_results", 5, A
-    cdqa/tools/complexipy_metrics.py, "ComplexipyMetrics::_complexity_to_grade", 5, A
-    cdqa/tools/complexipy_metrics.py, "ComplexipyMetrics::_process_results", 4, A
-    cdqa/tools/toon_serializer.py, "ToonSerializer::serialize", 4, A
-    cdqa/run_QA.py, "CodeQualityChecker::_calculate_quality_score", 3, A
-    cdqa/tools/toon_serializer.py, "ToonSerializer::_format_number", 3, A
-    cdqa/tools/toon_serializer.py, "ToonSerializer::_serialize_uniform_list", 3, A
-    cdqa/run_QA.py, "CodeQualityChecker::_format_complexipy_results", 2, A
-    cdqa/run_QA.py, "CodeQualityChecker::_format_ruff_results", 2, A
-    cdqa/run_QA.py, "CodeQualityChecker::_format_semgrep_results", 2, A
-    cdqa/run_QA.py, "CodeQualityChecker::_format_skylos_results", 2, A
-    cdqa/run_QA.py, "CodeQualityChecker::_format_ty_results", 2, A
-    cdqa/tools/pattern_analyzer.py, "PatternAnalyzer::analyze", 2, A
-    cdqa/tools/toon_serializer.py, "ToonSerializer::_is_uniform_list", 2, A
-    cdqa/run_QA.py, "CodeQualityChecker::__init__", 1, A
-    cdqa/tools/pattern_analyzer.py, "PatternAnalyzer::_analyze_file", 1, A
-    cdqa/tools/pattern_analyzer.py, "PatternAnalyzer::_is_camel_case", 1, A
-    cdqa/tools/toon_serializer.py, "ToonSerializer::_quote_key", 1, A
-    cdqa/cdqa_cli.py, create_parser, 0, A
-    cdqa/run_QA.py, "CodeQualityChecker::analyze", 0, A
-    cdqa/tools/complexipy_metrics.py, "ComplexipyMetrics::__init__", 0, A
-    cdqa/tools/complexipy_metrics.py, "ComplexipyMetrics::_empty_results", 0, A
-    cdqa/tools/pattern_analyzer.py, "PatternAnalyzer::__init__", 0, A
-    cdqa/tools/pattern_analyzer.py, "PatternAnalyzer::_is_pascal_case", 0, A
-    cdqa/tools/pattern_analyzer.py, "PatternAnalyzer::_is_snake_case", 0, A
-    cdqa/tools/ruff_checker.py, "RuffChecker::__init__", 0, A
-    cdqa/tools/ruff_checker.py, "RuffChecker::_empty_results", 0, A
-    cdqa/tools/semgrep_scanner.py, "SemgrepScanner::__init__", 0, A
-    cdqa/tools/semgrep_scanner.py, "SemgrepScanner::_empty_results", 0, A
-    cdqa/tools/skylos_analyzer.py, "SkylosAnalyzer::__init__", 0, A
-    cdqa/tools/skylos_analyzer.py, "SkylosAnalyzer::_empty_results", 0, A
-    cdqa/tools/toon_serializer.py, "ToonSerializer::__init__", 0, A
-    cdqa/tools/toon_serializer.py, "ToonSerializer::_escape_string", 0, A
-    cdqa/tools/toon_serializer.py, "ToonSerializer::dump", 0, A
-    cdqa/tools/toon_serializer.py, "ToonSerializer::dumps", 0, A
-    cdqa/tools/toon_serializer.py, dump, 0, A
-    cdqa/tools/toon_serializer.py, dumps, 0, A
-    cdqa/tools/ty_checker.py, "TyChecker::__init__", 0, A
-    cdqa/tools/ty_checker.py, "TyChecker::_empty_results", 0, A
-    cdqa/tools/ty_checker.py, "TyChecker::_get_error_description", 0, A
+  avg_complexity: 5.3
+  total_functions: 72
 skylos:
   total_dead_code: 0
   confidence_level: 60
-  []
-  []
   []
 consistency_issues[2]:
 -
@@ -135,68 +64,82 @@ consistency_issues[2]:
   variants[2]:
   -
     style: try/except with logging
-    files[5]:
+    files[4]:
     tools/complexipy_metrics.py
-    tools/ty_checker.py
-    tools/ruff_checker.py
+    tools/pattern_analyzer.py
     run_QA.py
-    tools/semgrep_scanner.py
-    count: 8
+    tools/base_checker.py
+    count: 6
   -
     style: try/except without logging
-    files[2]:
+    files[5]:
+    tools/skylos_analyzer.py
     cdqa_cli.py
-    run_QA.py
-    count: 2
-  recommendation: Standardize on 'try/except with logging' pattern
+    tools/cdqa_utils.py
+    tools/ty_checker.py
+    tools/complexipy_metrics.py
+    count: 8
+  recommendation: Standardize on 'try/except without logging' pattern
 -
   pattern: docstring_style
   variants[2]:
   -
     style: Google style
-    count: 8
+    count: 10
   -
     style: Plain docstrings
-    count: 9
-  recommendation: Standardize on Plain docstrings
-issue_clusters[3]:
+    count: 10
+  recommendation: Standardize on Google style
+issue_clusters[4]:
 -
-  cluster_id: 1
   theme: Multiple issues in pattern_analyzer.py
   file: cdqa/tools/pattern_analyzer.py
   issue_count: 3
   tools[1]:
   complexipy
   suggested_action: Review and fix 3 issues in cdqa/tools/pattern_analyzer.py
+  cluster_id: 1
 -
-  cluster_id: 2
   theme: Multiple issues in run_QA.py
   file: cdqa/run_QA.py
   issue_count: 2
   tools[1]:
   complexipy
   suggested_action: Review and fix 2 issues in cdqa/run_QA.py
+  cluster_id: 2
 -
+  theme: Multiple issues in base_checker.py
+  file: tools/base_checker.py
+  issue_count: 3
+  tools[1]:
+  ruff
+  suggested_action: Review and fix 3 issues in tools/base_checker.py
   cluster_id: 3
+-
   theme: High cognitive complexity
   file: null
-  issue_count: 8
+  issue_count: 6
   tools[1]:
   complexipy
   suggested_action: Refactor complex functions to improve maintainability
-immediate_fixes[3]:
+  cluster_id: 4
+immediate_fixes[4]:
 -
   priority: 1
-  action: "Refactor: cdqa/tools/pattern_analyzer.py (cognitive complexity 26→<12)"
-  effort: 2hrs
+  action: "Run: ruff check --fix ."
+  effort: 2min
 -
   priority: 2
-  action: "Refactor: cdqa/tools/skylos_analyzer.py (cognitive complexity 25→<12)"
+  action: "Refactor: cdqa/tools/pattern_analyzer.py (cognitive complexity 26→<12)"
   effort: 2hrs
 -
   priority: 3
   action: "Refactor: cdqa/tools/pattern_analyzer.py (cognitive complexity 24→<12)"
   effort: 2hrs
+-
+  priority: 4
+  action: "Refactor: cdqa/run_QA.py (cognitive complexity 21→<12)"
+  effort: 2hrs
 next_steps[2]:
-Refactor 8 high cognitive complexity functions (F/D grade)
+Refactor 6 high cognitive complexity functions (F/D grade)
 Enable ty strict mode for enhanced type safety

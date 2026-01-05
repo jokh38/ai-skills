@@ -27,31 +27,7 @@
     {
       "complexity": 2,
       "file_name": "run_QA.py",
-      "function_name": "CodeQualityChecker::_format_complexipy_results",
-      "path": "cdqa/run_QA.py"
-    },
-    {
-      "complexity": 2,
-      "file_name": "run_QA.py",
-      "function_name": "CodeQualityChecker::_format_ruff_results",
-      "path": "cdqa/run_QA.py"
-    },
-    {
-      "complexity": 2,
-      "file_name": "run_QA.py",
-      "function_name": "CodeQualityChecker::_format_semgrep_results",
-      "path": "cdqa/run_QA.py"
-    },
-    {
-      "complexity": 2,
-      "file_name": "run_QA.py",
-      "function_name": "CodeQualityChecker::_format_skylos_results",
-      "path": "cdqa/run_QA.py"
-    },
-    {
-      "complexity": 2,
-      "file_name": "run_QA.py",
-      "function_name": "CodeQualityChecker::_format_ty_results",
+      "function_name": "CodeQualityChecker::_create_issue",
       "path": "cdqa/run_QA.py"
     },
     {
@@ -85,9 +61,15 @@
       "path": "cdqa/run_QA.py"
     },
     {
-      "complexity": 10,
+      "complexity": 11,
       "file_name": "run_QA.py",
       "function_name": "CodeQualityChecker::_cluster_issues",
+      "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 15,
+      "file_name": "run_QA.py",
+      "function_name": "CodeQualityChecker::_format_tool_results",
       "path": "cdqa/run_QA.py"
     },
     {
@@ -97,10 +79,46 @@
       "path": "cdqa/run_QA.py"
     },
     {
-      "complexity": 19,
+      "complexity": 21,
       "file_name": "run_QA.py",
       "function_name": "CodeQualityChecker::_build_critical_issues",
       "path": "cdqa/run_QA.py"
+    },
+    {
+      "complexity": 0,
+      "file_name": "base_checker.py",
+      "function_name": "BaseToolChecker::__init__",
+      "path": "cdqa/tools/base_checker.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "base_checker.py",
+      "function_name": "BaseToolChecker::_normalize_path",
+      "path": "cdqa/tools/base_checker.py"
+    },
+    {
+      "complexity": 2,
+      "file_name": "base_checker.py",
+      "function_name": "BaseToolChecker::_run_tool",
+      "path": "cdqa/tools/base_checker.py"
+    },
+    {
+      "complexity": 5,
+      "file_name": "base_checker.py",
+      "function_name": "BaseToolChecker::_check_tool_version",
+      "path": "cdqa/tools/base_checker.py"
+    },
+    {
+      "complexity": 9,
+      "file_name": "base_checker.py",
+      "function_name": "BaseToolChecker::_parse_json_output",
+      "path": "cdqa/tools/base_checker.py"
+    },
+    {
+      "complexity": 5,
+      "file_name": "cdqa_utils.py",
+      "function_name": "run_analysis",
+      "path": "cdqa/tools/cdqa_utils.py"
     },
     {
       "complexity": 0,
@@ -115,7 +133,7 @@
       "path": "cdqa/tools/complexipy_metrics.py"
     },
     {
-      "complexity": 4,
+      "complexity": 2,
       "file_name": "complexipy_metrics.py",
       "function_name": "ComplexipyMetrics::_process_results",
       "path": "cdqa/tools/complexipy_metrics.py"
@@ -127,7 +145,13 @@
       "path": "cdqa/tools/complexipy_metrics.py"
     },
     {
-      "complexity": 11,
+      "complexity": 5,
+      "file_name": "complexipy_metrics.py",
+      "function_name": "ComplexipyMetrics::_run_tool",
+      "path": "cdqa/tools/complexipy_metrics.py"
+    },
+    {
+      "complexity": 9,
       "file_name": "complexipy_metrics.py",
       "function_name": "ComplexipyMetrics::measure",
       "path": "cdqa/tools/complexipy_metrics.py"
@@ -211,13 +235,13 @@
       "path": "cdqa/tools/ruff_checker.py"
     },
     {
-      "complexity": 8,
+      "complexity": 4,
       "file_name": "ruff_checker.py",
       "function_name": "RuffChecker::check",
       "path": "cdqa/tools/ruff_checker.py"
     },
     {
-      "complexity": 11,
+      "complexity": 9,
       "file_name": "ruff_checker.py",
       "function_name": "RuffChecker::_process_results",
       "path": "cdqa/tools/ruff_checker.py"
@@ -235,13 +259,13 @@
       "path": "cdqa/tools/semgrep_scanner.py"
     },
     {
-      "complexity": 8,
+      "complexity": 4,
       "file_name": "semgrep_scanner.py",
       "function_name": "SemgrepScanner::scan",
       "path": "cdqa/tools/semgrep_scanner.py"
     },
     {
-      "complexity": 11,
+      "complexity": 10,
       "file_name": "semgrep_scanner.py",
       "function_name": "SemgrepScanner::_process_results",
       "path": "cdqa/tools/semgrep_scanner.py"
@@ -259,15 +283,15 @@
       "path": "cdqa/tools/skylos_analyzer.py"
     },
     {
-      "complexity": 6,
+      "complexity": 4,
       "file_name": "skylos_analyzer.py",
-      "function_name": "SkylosAnalyzer::_process_results",
+      "function_name": "SkylosAnalyzer::scan",
       "path": "cdqa/tools/skylos_analyzer.py"
     },
     {
-      "complexity": 25,
+      "complexity": 5,
       "file_name": "skylos_analyzer.py",
-      "function_name": "SkylosAnalyzer::scan",
+      "function_name": "SkylosAnalyzer::_process_results",
       "path": "cdqa/tools/skylos_analyzer.py"
     },
     {
@@ -397,15 +421,15 @@
       "path": "cdqa/tools/ty_checker.py"
     },
     {
-      "complexity": 10,
+      "complexity": 4,
       "file_name": "ty_checker.py",
-      "function_name": "TyChecker::_process_results",
+      "function_name": "TyChecker::analyze",
       "path": "cdqa/tools/ty_checker.py"
     },
     {
-      "complexity": 18,
+      "complexity": 6,
       "file_name": "ty_checker.py",
-      "function_name": "TyChecker::analyze",
+      "function_name": "TyChecker::_process_results",
       "path": "cdqa/tools/ty_checker.py"
     }
   ],

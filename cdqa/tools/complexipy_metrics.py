@@ -5,14 +5,11 @@ Rust-based cognitive complexity analyzer that measures how hard code is
 to understand by humans (not machines), based on SonarSource research.
 """
 
-import json
-import subprocess
-from pathlib import Path
 from typing import Dict, Any
-import logging
+from base_checker import BaseToolChecker
 
 
-class ComplexipyMetrics:
+class ComplexipyMetrics(BaseToolChecker):
     """Wrapper for complexipy cognitive complexity analyzer."""
 
     def __init__(self, workspace: str):
@@ -22,8 +19,7 @@ class ComplexipyMetrics:
         Args:
             workspace: Root directory to analyze
         """
-        self.workspace = Path(workspace)
-        self.logger = logging.getLogger(__name__)
+        super().__init__(workspace, "complexipy")
 
     def measure(self, pattern: str = "**/*.py") -> Dict[str, Any]:
         """
@@ -35,122 +31,118 @@ class ComplexipyMetrics:
         Returns:
             Dictionary with complexity metrics
         """
+        is_installed, version = self._check_tool_version(["complexipy", "--version"])
+        if not is_installed:
+            return self._empty_results()
+
         json_file_path = None
         try:
-            # Check if complexipy is installed
-            version_result = subprocess.run(
-                ["complexipy", "--version"],
-                capture_output=True,
-                text=True,
-                timeout=10
+            cmd = ["complexipy", str(self.workspace), "--output-json", "--quiet"]
+            self._run_tool(cmd, timeout=60, capture_output=False)
+
+            json_files = sorted(
+                self.workspace.glob("complexipy_results_*.json"),
+                key=lambda p: p.stat().st_mtime,
+                reverse=True,
             )
-            if version_result.returncode != 0:
-                self.logger.error("complexipy not installed")
-                return self._empty_results()
-
-            version = version_result.stdout.strip()
-
-            # Run complexipy with JSON output
-            # Note: complexipy saves to a file in current working directory, stdout only contains progress
-            cmd = [
-                "complexipy",
-                str(self.workspace),
-                "--output-json",
-                "--quiet"
-            ]
-
-            subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=60,
-                cwd=str(self.workspace)
-            )
-
-            # Find the generated JSON file (complexipy saves to the cwd we specified, which is workspace)
-            json_files = sorted(self.workspace.glob("complexipy_results_*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
 
             if json_files:
                 json_file_path = json_files[0]
-                try:
-                    with open(json_file_path, 'r') as f:
-                        content = f.read()
-                        # Parse the JSON array directly
-                        functions_array = json.loads(content)
-                        data = {"files": functions_array}
-                except (json.JSONDecodeError, IOError) as e:
-                    self.logger.error(f"Failed to read complexipy JSON file: {e}")
-                    return self._empty_results()
+                import json
+
+                with open(json_file_path, "r") as f:
+                    functions_array = json.loads(f.read())
+                    data = {"files": functions_array}
             else:
                 self.logger.warning("No complexipy results file found")
                 return self._empty_results()
 
-            # Process and combine results
             results = self._process_results(data, version)
 
-            # Clean up the temporary JSON file
             if json_file_path and json_file_path.exists():
                 try:
                     json_file_path.unlink()
-                    self.logger.debug(f"Removed temporary complexipy file: {json_file_path.name}")
+                    self.logger.debug(
+                        f"Removed temporary complexipy file: {json_file_path.name}"
+                    )
                 except Exception as e:
-                    self.logger.warning(f"Failed to remove temporary file {json_file_path}: {e}")
+                    self.logger.warning(
+                        f"Failed to remove temporary file {json_file_path}: {e}"
+                    )
 
             return results
 
-        except Exception as e:
-            self.logger.error(f"complexipy analysis failed: {e}")
+        except Exception:
             return self._empty_results()
 
-    def _process_results(self, data: Dict, version: str) -> Dict[str, Any]:
+    def _run_tool(
+        self, cmd: list, timeout: int = 60, capture_output: bool = True
+    ) -> Any:
+        """
+        Override to run tool without capturing stdout for complexipy.
+        """
+        import subprocess
+
+        try:
+            if capture_output:
+                return super()._run_tool(cmd, timeout)
+            else:
+                return subprocess.run(
+                    cmd,
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout,
+                    cwd=str(self.workspace),
+                )
+        except subprocess.TimeoutExpired as e:
+            self.logger.error(f"{self.tool_name} timed out")
+            raise
+        except Exception as e:
+            self.logger.error(f"{self.tool_name} failed: {e}")
+            raise
+
+    def _process_results(self, data: dict, version: str) -> Dict[str, Any]:
         """Process raw complexipy results into structured format."""
         hotspots = []
-        
-        # Process complexity results
-        functions = data.get("files", [])
-        for func in functions:
+
+        for func in data.get("files", []):
             file_path = func.get("path", "")
-            try:
-                rel_path = str(Path(file_path).relative_to(self.workspace))
-            except ValueError:
-                rel_path = file_path
-            
-            # complexipy uses 'complexity' key
+            rel_path = self._normalize_path(file_path)
+
             complexity_value = func.get("complexity", 0)
             grade = self._complexity_to_grade(complexity_value)
-            
+
             function_name = func.get("function_name", "unknown")
-            
-            hotspots.append({
-                "file": rel_path,
-                "function": function_name,
-                "complexity": complexity_value,
-                "grade": grade
-            })
-        
-        # Sort by complexity (highest first)
+
+            hotspots.append(
+                {
+                    "file": rel_path,
+                    "function": function_name,
+                    "complexity": complexity_value,
+                    "grade": grade,
+                }
+            )
+
         hotspots.sort(key=lambda x: x["complexity"], reverse=True)
-        
-        # Calculate average complexity
-        if hotspots:
-            avg_complexity = sum(h["complexity"] for h in hotspots) / len(hotspots)
-        else:
-            avg_complexity = 0
-        
+
+        avg_complexity = (
+            sum(h["complexity"] for h in hotspots) / len(hotspots) if hotspots else 0
+        )
+
         return {
             "version": version,
             "avg_complexity": round(avg_complexity, 1),
             "total_functions": len(hotspots),
-            "complexity_hotspots": hotspots
+            "complexity_hotspots": hotspots,
         }
 
     def _complexity_to_grade(self, complexity: int) -> str:
         """
         Convert cognitive complexity score to letter grade.
-        
+
         Note: Cognitive complexity thresholds are stricter than cyclomatic
         because cognitive complexity measures human understanding difficulty.
-        
+
         Thresholds based on SonarSource recommendations:
         - 0-5: Simple, easy to understand (A)
         - 6-10: Moderate complexity (B)
@@ -175,5 +167,5 @@ class ComplexipyMetrics:
             "version": "unknown",
             "avg_complexity": 0,
             "total_functions": 0,
-            "complexity_hotspots": []
+            "complexity_hotspots": [],
         }
